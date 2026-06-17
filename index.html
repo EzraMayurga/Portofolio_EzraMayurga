@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ezra Mayurga — Portfolio</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&family=Inter:wght@400;600;700&family=Syncopate:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --amr-green: #004225;        
+            --amr-lime: #CEFF00;         
+            --carbon-black: #050706;     
+            --pit-panel: #0E1210;        
+            --text-light: #F4F6F5;
+            --text-muted: #8E9993;
+            --ease-f1: cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        html { 
+            scroll-behavior: smooth; 
+        }
+        
+        body {
+            background-color: var(--carbon-black);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .f1-font { 
+            font-family: 'Racing Sans One', sans-serif; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            font-style: italic; 
+        }
+        
+        .tech-heading { 
+            font-family: 'Syncopate', sans-serif; 
+            text-transform: uppercase; 
+            letter-spacing: 4px; 
+        }
+
+        body::before {
+            content: ""; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh;
+            background: linear-gradient(rgba(206, 255, 0, 0.015) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(206, 255, 0, 0.015) 1px, transparent 1px);
+            background-size: 40px 40px; 
+            animation: speedGrid 15s linear infinite; 
+            z-index: -1; 
+            pointer-events: none;
+        }
+        
+        @keyframes speedGrid { 
+            0% { background-position: 0 0; } 
+            100% { background-position: 40px 40px; } 
+        }
+
+        /* Hero Layout & Draggable Section */
+        .hero-section { 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            border-bottom: 2px solid rgba(255,255,255,0.03); 
+        }
+
+        .f1-photo-corridor { 
+            width: 100%; 
+            height: 55vh; 
+            overflow: hidden; 
+            background: #000; 
+            border-bottom: 4px solid var(--amr-lime); 
+            position: relative;
+            cursor: grab;
+            user-select: none;
+        }
+        
+        .f1-photo-corridor:active { 
+            cursor: grabbing; 
+        }
+        
+        .f1-marquee-track { 
+            display: flex; 
+            width: max-content; 
+            height: 100%; 
+            will-change: transform;
+            transition: transform 0.1s ease-out;
+        }
+        
+        .f1-photo-card { 
+            width: 35vw; 
+            height: 100%; 
+            flex-shrink: 0; 
+            position: relative; 
+            background: #111; 
+            overflow: hidden; 
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 992px) { 
+            .f1-photo-card { width: 80vw; } 
+        }
+
+        .f1-photo-card img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            display: block; 
+            filter: grayscale(15%) contrast(110%); 
+            pointer-events: none; 
+            transition: all 0.3s var(--ease-f1); 
+        }
+        
+        .f1-photo-card:hover img { 
+            filter: grayscale(0%) contrast(125%); 
+            transform: scale(1.02); 
+        }
+        
+        .f1-photo-card::before { 
+            content: "MOHAN"; 
+            position: absolute; 
+            bottom: 20px; 
+            left: 20px; 
+            font-family: 'Syncopate', sans-serif; 
+            font-weight: 900; 
+            font-size: 0.75rem; 
+            background: var(--carbon-black); 
+            color: var(--amr-lime); 
+            padding: 6px 14px; 
+            z-index: 2; 
+            border-left: 3px solid var(--amr-lime); 
+            letter-spacing: 2px; 
+        }
+
+        .hero-details { 
+            padding: 40px 6% 60px 6%; 
+            background: linear-gradient(to top, #050706 85%, transparent); 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+        }
+        
+        /* Interactive Floating Avatar */
+        .f1-robot-brand {
+            position: fixed;
+            top: 25px; 
+            right: 25px; 
+            width: 120px; 
+            height: 120px;
+            overflow: visible;
+            border: none;
+            background: rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(2px);
+            box-shadow: none;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-details h1 { font-size: 6.5rem; color: #FFF; line-height: 0.85; margin-bottom: 20px; letter-spacing: -2px; width: 70%; }
+        .hero-details h2 { font-size: 1.6rem; color: var(--amr-lime); margin-bottom: 25px; letter-spacing: 4px; font-weight: 900; }
+        .hero-details p { font-size: 1.2rem; line-height: 1.8; color: var(--text-muted); max-width: 70%; margin-bottom: 45px; }
+
+        .f1-telemetry-contacts { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 40px; 
+            font-size: 1.05rem; 
+            border-top: 1px dashed rgba(255,255,255,0.08); 
+            padding-top: 30px; 
+            max-width: 70%; 
+        }
+        
+        .f1-telemetry-contacts div { display: flex; align-items: center; gap: 12px; }
+        .f1-telemetry-contacts i { color: var(--amr-lime); font-size: 1.2rem; }
+        .f1-redirect-anchor { color: var(--text-light); text-decoration: none; font-weight: 600; transition: all 0.3s var(--ease-f1); border-bottom: 1px solid transparent; }
+        .f1-redirect-anchor:hover { color: var(--amr-lime); border-bottom-color: var(--amr-lime); }
+
+        /* Skills Modular Grid Section */
+        .skills-section { background: var(--pit-panel); padding: 120px 8%; border-bottom: 2px solid rgba(255,255,255,0.03); text-align: center; }
+        .skills-wrapper { max-width: 1000px; margin: 0 auto; }
+        .skills-mystery-box { background: linear-gradient(135deg, var(--amr-green), #002112); border: 2px solid var(--amr-lime); padding: 55px 40px; cursor: pointer; transition: all 0.3s var(--ease-f1); box-shadow: 0 30px 60px rgba(0,0,0,0.7); }
+        .skills-mystery-box:hover { transform: translateY(-3px); box-shadow: 0 35px 70px rgba(206,255,0,0.15); }
+        .skills-mystery-box i { font-size: 4rem; color: var(--amr-lime); margin-bottom: 15px; }
+        
+        .skills-unboxed-drawer { 
+            display: none; 
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+            gap: 15px; 
+            margin-top: 50px; 
+        }
+        
+        .skill-item-node { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 25px 15px; text-align: center; font-weight: bold; transition: all 0.3s var(--ease-f1); }
+        .skill-item-node:hover { background: var(--amr-lime); color: var(--carbon-black); transform: scale(1.05); }
+        .skill-item-node i { display: block; font-size: 1.8rem; margin-bottom: 10px; color: var(--amr-lime); }
+        .skill-item-node:hover i { color: var(--carbon-black); }
+        .skill-item-node span.skill-category { display: block; font-size: 0.65rem; color: var(--text-muted); margin-top: 5px; letter-spacing: 1px; }
+        .skill-item-node:hover span.skill-category { color: var(--carbon-black); opacity: 0.8; }
+
+        /* Project Engine Blocks */
+        .projects-section { padding: 120px 8%; border-bottom: 2px solid rgba(255,255,255,0.03); }
+        .section-header { margin-bottom: 70px; border-left: 5px solid var(--amr-lime); padding-left: 20px; }
+        .section-header h2 { font-size: 2.2rem; color: #FFF; }
+        .projects-linear-stack { display: flex; flex-direction: column; gap: 60px; max-width: 1400px; margin: 0 auto; }
+        .project-giant-card { background: #0B0E0D; border: 1px solid rgba(255,255,255,0.03); display: grid; grid-template-columns: 1.15fr 1.85fr; gap: 40px; padding: 40px; transition: all 0.3s var(--ease-f1); }
+        .project-giant-card:hover { border-color: var(--amr-lime); background: #101513; }
+        .img-container { background: #000; padding: 4px; border: 1px solid rgba(255,255,255,0.08); height: fit-content; }
+        .img-container img { width: 100%; height: 230px; object-fit: cover; display: block; }
+        .project-content-data h3 { font-size: 2rem; color: var(--amr-lime); margin-bottom: 12px; }
+        .project-content-data .type-badge { font-size: 0.75rem; color: #FFF; background: var(--amr-green); padding: 5px 12px; display: inline-block; margin-bottom: 20px; }
+        .project-content-data p { font-size: 1.05rem; line-height: 1.7; color: var(--text-muted); margin-bottom: 25px; }
+        .project-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; font-size: 0.95rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 20px; margin-bottom: 25px; }
+        .detail-block strong { color: #FFF; display: block; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 1px; }
+        .tech-tags-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
+        .tech-tags-row span { font-size: 0.75rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 4px 14px; color: var(--text-light); }
+        .project-action-link { color: var(--amr-lime); text-decoration: none; font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+
+        /* Experience Timeline Layout */
+        .timeline-section { padding: 120px 8%; background: #060807; border-bottom: 2px solid rgba(255,255,255,0.03); }
+        .timeline-matrix { display: flex; flex-direction: column; gap: 20px; max-width: 1400px; margin: 0 auto; }
+        .timeline-stripe { background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); padding: 40px; display: grid; grid-template-columns: 1.3fr 2.7fr 1fr; align-items: flex-start; gap: 30px; transition: all 0.3s var(--ease-f1); }
+        .timeline-stripe:hover { background: var(--amr-green); border-color: var(--amr-lime); }
+        .stripe-date { font-size: 1.1rem; color: var(--amr-lime); }
+        .stripe-core h4 { font-size: 1.5rem; color: #FFF; margin-bottom: 10px; }
+        .stripe-core p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; }
+        .stripe-core ul { margin-top: 15px; margin-left: 20px; color: var(--text-muted); font-size: 1rem; line-height: 1.7; }
+        .timeline-stripe:hover .stripe-core p, .timeline-stripe:hover .stripe-core ul { color: var(--text-light); }
+        .stripe-layer-badge { justify-self: end; font-size: 0.75rem; background: #000; padding: 6px 14px; color: var(--text-light); border: 1px solid rgba(255,255,255,0.1); width: max-content; }
+
+        /* Dynamic Parallax Styling */
+        #dynamic-face {
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+
+        /* Avatar expressive head tilt wrapper */
+        .f1-robot-brand svg {
+            transition: transform 0.15s var(--ease-f1);
+            will-change: transform;
+        }
+
+        /* Auto-scrolling photo corridor */
+        .f1-marquee-track.auto-scroll {
+            animation: f1AutoScrollRight 22s linear infinite;
+        }
+
+        .f1-marquee-track.auto-scroll.paused {
+            animation-play-state: paused;
+        }
+
+        @keyframes f1AutoScrollRight {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @media (max-width: 992px) {
+            .project-giant-card, .timeline-stripe { grid-template-columns: 1fr; }
+            .stripe-layer-badge { justify-self: start; }
+            .hero-details h1, .hero-details p, .f1-telemetry-contacts { width: 100%; max-width: 100%; }
+            .f1-robot-brand { position: relative; top: 0; right: 0; margin: 30px auto; width: 110px; height: 110px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="master-canvas-node">
+
+        <!-- Floating Minimalist Head Vector -->
+        <div class="f1-robot-brand" id="stickyRobotHead">
+            <svg viewBox="0 0 100 100" width="100%" height="100%" style="display: block; overflow: visible;">
+                <g id="static-head-base">
+                    <path d="M32 46 C 32 64, 40 73, 50 73 C 60 73, 68 64, 68 46" fill="none" stroke="#F4F6F5" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M32 49 C 28 49, 28 55, 32 55" fill="none" stroke="#F4F6F5" stroke-width="2" />
+                    <path d="M68 49 C 72 49, 72 55, 68 55" fill="none" stroke="#F4F6F5" stroke-width="2" />
+                    <path d="M28 44 C 23 37, 28 25, 37 27 C 40 18, 51 17, 57 23 C 64 19, 73 24, 73 34 C 76 41, 72 48, 69 50 C 67 44, 64 46, 59 42 C 55 46, 49 41, 44 45 C 39 39, 34 44, 28 44 Z" fill="none" stroke="#F4F6F5" stroke-width="2.5" stroke-linejoin="round"/>
+                    <path d="M34 33 Q 39 43 43 36 Q 47 46 51 38 Q 57 45 62 35" fill="none" stroke="#F4F6F5" stroke-width="2" stroke-linecap="round"/>
+                </g>
+                <g id="dynamic-face">
+                    <path d="M35 48 Q 40 45 45 48 Q 40 52 35 48 Z" fill="none" stroke="#F4F6F5" stroke-width="1.8" stroke-linejoin="round"/>
+                    <path d="M55 48 Q 60 45 65 48 Q 60 52 55 48 Z" fill="none" stroke="#F4F6F5" stroke-width="1.8" stroke-linejoin="round"/>
+                    <path d="M50 51 L49 55 L52 55" fill="none" stroke="#F4F6F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="33" y1="53" x2="35" y2="51" stroke="#F4F6F5" stroke-width="1" />
+                    <line x1="36" y1="53" x2="38" y2="51" stroke="#F4F6F5" stroke-width="1" />
+                    <line x1="62" y1="53" x2="64" y2="51" stroke="#F4F6F5" stroke-width="1" />
+                    <line x1="65" y1="53" x2="67" y2="51" stroke="#F4F6F5" stroke-width="1" />
+                    <path d="M46 61 Q 50 64 54 61" fill="none" stroke="#F4F6F5" stroke-width="2" stroke-linecap="round"/>
+                    <circle class="f1-movable-pupil" cx="40" cy="48.5" r="2.5" fill="#CEFF00" />
+                    <circle class="f1-movable-pupil" cx="60" cy="48.5" r="2.5" fill="#CEFF00" />
+                </g>
+            </svg>
+        </div>
+
+        <!-- Section Hero Structure -->
+        <section class="hero-section">
+            <div class="f1-photo-corridor" id="dragCorridor">
+                <div class="f1-marquee-track auto-scroll" id="dragTrack">
+                    <div class="f1-photo-card"><img src="profile/mohan_3.jpg" alt="Asset 1"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_1.jpg" alt="Asset 2"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_2.jpg" alt="Asset 3"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_2.jpg" alt="Asset 4"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_1.jpg" alt="Asset 5"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_3.jpg" alt="Asset 1 duplicate"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_1.jpg" alt="Asset 2 duplicate"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_2.jpg" alt="Asset 3 duplicate"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_2.jpg" alt="Asset 4 duplicate"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_1.jpg" alt="Asset 5 duplicate"></div>
+                </div>
+            </div>
+
+            <div class="hero-details">
+                <span class="f1-font" style="font-size: 1.8rem; color: var(--amr-lime); display: block; margin-bottom: 15px; font-weight: 900;"> focused on INTELLIGENCE SYSTEMS </span>
+                <h1 class="f1-font">EZRA MAYURGA</h1>
+                <h2 class="tech-heading">Computer Science Student // BINUS University</h2>
+                <p>
+                    Computer Science student at BINUS University specializing in Intelligence Systems. Highly adaptive development background working with deep structural learning models, computational vision engines, and scalable data pipeline optimization scripts. Currently deployed as the elected President of BVoice Radio to sync enterprise-wide communication layers, sponsorship frameworks, and off-air brand recognition plans.
+                </p>
+                
+                <div class="f1-telemetry-contacts">
+                    <div><i class="fas fa-envelope"></i><span>ezra.mayurga@gmail.com</span></div>
+                    <div><i class="fas fa-phone"></i><span>081317676980</span></div>
+                    <div><i class="fab fa-instagram"></i><a href="https://instagram.com/ezruroww" target="_blank" class="f1-redirect-anchor">@ezruroww</a></div>
+                    <div><i class="fab fa-linkedin"></i><a href="https://linkedin.com/in/ezra-mayurga-44746021a" target="_blank" class="f1-redirect-anchor">Ezra Mayurga</a></div>
+                    <div><i class="fab fa-github"></i><a href="https://github.com/EzraMayurga" target="_blank" class="f1-redirect-anchor">EzraMayurga</a></div>
+                    <div><i class="fas fa-envelope"></i><span>ezra.mayurga@binus.ac.id</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Skill Inventory Drawer -->
+        <section class="skills-section">
+            <div class="skills-wrapper">
+                <div class="section-header" style="text-align: center; margin-bottom: 40px; border-left: none; padding-left: 0;">
+                    <h2 class="f1-font" style="font-size: 2.5rem;">// SKILL INVENTORY </h2>
+                    <p class="f1-font" style="font-size: 1.1rem; color: var(--amr-lime); margin-top: 5px;"> Try clicking the storage module box below !</p>
+                </div>
+                
+                <div class="skills-mystery-box" id="mysteryBoxTrigger">
+                    <i class="fas fa-boxes"></i>
+                    <h3 class="tech-heading" style="font-size:0.9rem; color: #FFF; margin-bottom: 5px;">CORES</h3>
+                    <p class="f1-font" style="font-size: 1.5rem; color: var(--amr-lime);">OPEN DRAWER</p>
+                </div>
+
+                <div class="skills-unboxed-drawer tech-heading" id="unboxedDrawerGrid" style="font-size: 0.75rem;">
+                    <div class="skill-item-node"><i class="fab fa-python"></i>PYTHON ENGINE<span class="skill-category">AI Core</span></div>
+                    <div class="skill-item-node"><i class="fas fa-brain"></i>SUPERVISED LEARNING<span class="skill-category">Scikit-Learn / ML</span></div>
+                    <div class="skill-item-node"><i class="fas fa-calculator"></i>LINEAR ALGEBRA<span class="skill-category">Matrix / NumPy</span></div>
+                    <div class="skill-item-node"><i class="fas fa-chart-line"></i>DATA PREPROCESSING<span class="skill-category">Pandas Analytics</span></div>
+                    <div class="skill-item-node"><i class="fas fa-eye"></i>COMPUTER VISION<span class="skill-category">OpenCV Core</span></div>
+                    <div class="skill-item-node"><i class="fas fa-database"></i>RDBMS STRUCTURE<span class="skill-category">SQL / Query Optimization</span></div>
+                    <div class="skill-item-node"><i class="fab fa-js"></i>JAVASCRIPT<span class="skill-category">Web Systems</span></div>
+                    <div class="skill-item-node"><i class="fab fa-react"></i>REACT / NEXT.JS<span class="skill-category">Frontend Core</span></div>
+                    <div class="skill-item-node"><i class="fab fa-node-js"></i>NODE.JS API<span class="skill-category">Backend Logic</span></div>
+                    <div class="skill-item-node"><i class="fas fa-sitemap"></i>STRATEGIC OPERATIONS<span class="skill-category">Presidential Asset</span></div>
+                    <div class="skill-item-node"><i class="fas fa-comments-dollar"></i>NEGOTIATION<span class="skill-category">Sponsorship / Media</span></div>
+                    <div class="skill-item-node"><i class="fas fa-users-cog"></i>CROSS-FUNCTIONAL MGMT<span class="skill-category">40+ Staff </span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECT -->
+        <section class="projects-section">
+            <div class="section-header"><h2 class="f1-font" style="font-size: 2.5rem;">// PROJECT RELEASES</h2></div>
+            <!-- GOLF -->
+            <div class="projects-linear-stack">
+                <div class="project-giant-card">
+                    <div class="img-container"><img src="profile/Golf.png" alt="Golf Project Image"></div>
+                    <div class="project-content-data">
+                        <div>
+                            <span class="type-badge f1-font">Software Engineering // Group Deployment</span>
+                            <h3>Golf Helper Identifier</h3>
+                            <p>A web-based golf swing analysis system powered by YOLOv8-Pose that connects players and coaches to a digital coaching ecosystem. Eliminates heavy human coaching fees and allows native, zero-installation setup.</p>
+                            <div class="project-details-grid">
+                                <div class="detail-block"><strong class="tech-heading">CONTRIBUTIONS</strong><span> Team Leader & Developed the underlying Node.js backend architecture and WebSocket integration. Hooked up Python YOLOv8 processing arrays to Gemini AI.</span></div>
+                                <div class="detail-block"><strong class="tech-heading">METRICS</strong><span>Secures low runtime delay loops over web endpoints. System processes and logs analysis reports in under 3 seconds.</span></div>
+                            </div>
+                        </div>
+                        <div class="tech-tags-row tech-heading"><span>React (Vite)</span><span>Node.js</span><span>Python</span><span>YOLOv8-Pose</span><span>Gemini API</span><span>Docker</span></div>
+                        <a href="https://golf-helper-identifier.vercel.app" target="_blank" class="project-action-link f1-font">VIEW LIVE RUNTIME <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- FLOODSIGHT -->
+                <div class="project-giant-card">
+                    <div class="img-container"><img src="profile/FloodSight.png" alt="Flood Project Image"></div>
+                    <div class="project-content-data">
+                        <div>
+                            <span class="type-badge f1-font">Artificial Intelligence // Group Deployment</span>
+                            <h3>FloodSight Jakarta</h3>
+                            <p>An AI early response platform monitoring flood status across Jakarta's critical sectors. Pairs live meteo feeds and elevation vectors with smart rescue paths at $0 structural maintenance fees.</p>
+                            <div class="project-details-grid">
+                                <div class="detail-block"><strong class="tech-heading">CONTRIBUTIONS</strong><span>Extended the application framework with verified Citizen Incident Reporting logs, Haversine geospatial logic, and custom Leaflet maps.</span></div>
+                                <div class="detail-block"><strong class="tech-heading">METRICS</strong><span>Combines disparate geographical metrics into a responsive web map ecosystem engineered for municipal flood centers.</span></div>
+                            </div>
+                        </div>
+                        <div class="tech-tags-row tech-heading"><span>Next.js 14</span><span>TypeScript</span><span>Tailwind CSS</span><span>Leaflet Map</span><span>Open-Meteo API</span><span>OSRM</span></div>
+                        <a href="https://github.com/EzraMayurga/floodsight-jakarta" target="_blank" class="project-action-link f1-font">VIEW REPOSITORY LOGS <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Gambling DETECTION -->
+                <div class="project-giant-card">
+                    <div class="img-container"><img src="profile/GamblingDetection.png" alt="NLP Security Block"></div>
+                    <div class="project-content-data">
+                        <div>
+                            <span class="type-badge f1-font">Natural Language Processing // Content Security</span>
+                            <h3>Gambling Content Detection Engine</h3>
+                            <p>A specialized text classification network designed to automatically isolate, flag, and filter out high-volume gambling spam and illegal promotional materials from YouTube comments.</p>
+                            <div class="project-details-grid">
+                                <div class="detail-block"><strong class="tech-heading">CONTRIBUTIONS</strong><span>Architected the structural text moderation system inside a Python workspace. Developed the core tokenization and classifier logic.</span></div>
+                                <div class="detail-block"><strong class="tech-heading">ALGORITHMIC MATRIX</strong><span>Combines a Naive Bayes probability classifier pipeline with custom regex pattern-matching routines to trap masked spam arrays.</span></div>
+                            </div>
+                        </div>
+                        <div class="tech-tags-row tech-heading"><span>Python</span><span>Naive Bayes</span><span>Regex Matched</span><span>NLP Core</span><span>Data Moderation</span></div>
+                        <a href="https://github.com/EzraMayurga" target="_blank" class="project-action-link f1-font">VIEW ENGINE DISPATCH <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Edge Detection -->
+                <div class="project-giant-card">
+                    <div class="img-container"><img src="profile/ComVis.png" alt="Computer Vision Matrix"></div>
+                    <div class="project-content-data">
+                        <div>
+                            <span class="type-badge f1-font">Computer Vision // Spatial Processing</span>
+                            <h3>Optical Edge Detection Pipeline</h3>
+                            <p>A programmatic computer vision processing array engineered to process static image arrays, apply matrix filters, and extract clean architectural geometries and structural outlines.</p>
+                            <div class="project-details-grid">
+                                <div class="detail-block"><strong class="tech-heading">CONTRIBUTIONS</strong><span>Engineered the computational image processing workflow utilizing multi-stage space filtering. Explored pure pixel matrix convolution.</span></div>
+                                <div class="detail-block"><strong class="tech-heading">ALGORITHMIC MATRIX</strong><span>Deploys Gaussian multi-channel filtering nodes for signal noise reduction paired with native Canny Edge Detection loops.</span></div>
+                            </div>
+                        </div>
+                        <div class="tech-tags-row tech-heading"><span>Python</span><span>OpenCV Matrix</span><span>Gaussian Filter</span><span>Canny Algorithm</span><span>Spatial Compute</span></div>
+                        <a href="https://github.com/EzraMayurga" target="_blank" class="project-action-link f1-font">VIEW MATRIX SPECS <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Segment -->
+        <section class="timeline-section">
+            <div class="section-header"><h2 class="f1-font" style="font-size: 2.5rem;">// DEPLOYMENTS EXPERIENCES</h2></div>
+
+            <div class="timeline-matrix">
+                <!-- NEW TERMINAL ARRAY: 2026 - Present -->
+                <div class="timeline-stripe">
+                    <div class="stripe-date f1-font">MAR 2026 - PRESENT</div>
+                    <div class="stripe-core">
+                        <h4 class="f1-font">BackEnd Developer — BVoice Radio Jakarta</h4>
+                        <p>Responsible for designing, building, and maintaining the server-side logic, data management workflows, and API integrations that kept the university's online radio and media platform running smoothly:</p>
+                        <ul>
+                            <li>API Design: Developed secure RESTful APIs to power web platforms and internal station tools</li>
+                            <li>Performance: Optimized audio streaming backend services to ensure low-latency playback</li>
+                            <li>Database Management: Structured databases for efficient management for data user</li>
+                            <li>Collaboration: Partnered with frontend teams to rapidly deploy new platform features</li>
+                        </ul>
+                    </div>
+                    <div class="stripe-layer-badge tech-heading">STEERING GRID</div>
+                </div>
+
+                <!-- NEW TERMINAL ARRAY: Announcer 2025 - Present -->
+                <div class="timeline-stripe">
+                    <div class="stripe-date f1-font">MAR 2025 - PRESENT</div>
+                    <div class="stripe-core">
+                        <h4 class="f1-font">Producer & Announcer — BVoice Radio Jakarta</h4>
+                        <p>Deployed as primary on-air brand asset and vocal engineering transmission point under the operational standard "Your Voice and Your Sound":</p>
+                        <ul>
+                            <li>Executing high-retention live radio streaming arrays, managing creative youth content segments, real-time community entertainment logs, and news deliveries.</li>
+                            <li>Synthesizing real-time interactive audience feeds to maximize station engagement metrics.</li>
+                        </ul>
+                    </div>
+                    <div class="stripe-layer-badge tech-heading">MEDIA INVENTORY</div>
+                </div>
+
+                <!-- UPDATED DEPLOYMENT: President 2025 - 2026 -->
+                <div class="timeline-stripe">
+                    <div class="stripe-date f1-font">MAR 2025 - MAR 2026</div>
+                    <div class="stripe-core">
+                        <h4 class="f1-font">President — BVoice Radio Jakarta</h4>
+                        <p>Commanded the overall organizational vision, multi-tier budget pools, and large-scale execution frameworks for a student-run online media network associated with BINUS University:</p>
+                        <ul>
+                            <li>Managed full lifecycle pipeline parameters for off-air campaigns from initial conceptual maps, financial budgeting, and fundraising arrays down to final deployment.</li>
+                            <li>Negotiated commercial investment packages with external brand partners, corporate sponsors, and media syndicates to discover alternative revenue pipelines.</li>
+                            <li>Oversaw physical production nodes, tracking venue architecture logic, technical sound/lighting arrays, zoning clearances, and multi-division team alignments.</li>
+                            <li>Executed runtime mitigation vectors for data/technical bottlenecks, ensuring all milestones tracking perfectly along the targeted roadmap schedule.</li>
+                            <li>Engineered structural leadership succession maps to secure continuous, sustainable organizational handovers for subsequent terms.</li>
+                        </ul>
+                    </div>
+                    <div class="stripe-layer-badge tech-heading">COMMAND SECTOR</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Achievements Grid Block -->
+        <section class="timeline-section" style="background: #090d0b;">
+            <div class="section-header"><h2 class="f1-font" style="font-size: 2.5rem;">// ACHIEVEMENTS </h2></div>
+
+            <div class="timeline-matrix">
+                <!-- NEW ACHIEVEMENT: Microsoft Elevate AI -->
+                <div class="timeline-stripe">
+                    <div class="stripe-date f1-font">MAR 2026</div>
+                    <div class="stripe-core">
+                        <h4 class="f1-font">Microsoft Elevate AI Certification — Azure AI Fundamentals</h4>
+                        <p>Held by Microsoft x BINUS University (GreatNusa Platform):</p>
+                        <ul>
+                            <li>Completed 15 hours of specialized technical validation tracking baseline AI framework implementations.</li>
+                            <li>Explored cloud infrastructure deployment paradigms and fundamental Azure engine capabilities.</li>
+                        </ul>
+                    </div>
+                    <div class="stripe-layer-badge tech-heading">CREDENTIAL CLEARANCE</div>
+                </div>
+
+                <!-- NEW ACHIEVEMENT: Generative AI LinkedIn -->
+                <div class="timeline-stripe">
+                    <div class="stripe-date f1-font">MAR 2026</div>
+                    <div class="stripe-core">
+                        <h4 class="f1-font">Generative AI Core Systems Engineering Verification</h4>
+                        <p>Held by LinkedIn Learning Hub Architecture Platform:</p>
+                        <ul>
+                            <li>Validated proficiency across modern generative models, structural weights, prompting blocks, and real-world enterprise AI utility loops.</li>
+                        </ul>
+                    </div>
+                    <div class="stripe-layer-badge tech-heading">COMPUTATIONAL CORE</div>
+                </div>
+
+                <!-- NEW ACHIEVEMENT: NSO Gold Medal Mathematics -->
+                <div class="timeline-stripe">
+                    <div class="stripe-date f1-font">2022</div>
+                    <div class="stripe-core">
+                        <h4 class="f1-font">National Gold Medalist // National Science Olympiad 2.0</h4>
+                        <p>National level mathematics competitive event:</p>
+                        <ul>
+                            <li>Secured the top-tier National Gold Medal placement for advanced numeric analysis, complex logical induction matrix capabilities, and discrete computational mathematics.</li>
+                        </ul>
+                    </div>
+                    <div class="stripe-layer-badge tech-heading">PODIUM</div>
+                </div>
+
+                <!-- NEW ACHIEVEMENT: UI Physics Pre-U -->
+                <div class="timeline-stripe">
+                    <div class="stripe-date f1-font">2024</div>
+                    <div class="stripe-core">
+                        <h4 class="f1-font">FISIKA DASAR 2 // Universitas Indonesia Pre-U</h4>
+                        <p>Academic acceleration validation issued directly by UI Faculty Core:</p>
+                        <ul>
+                            <li>Successfully completed the Pre-University academic tier targeting foundational physical system mechanics (Fisika Dasar 2) with A- scored</li>
+                        </ul>
+                    </div>
+                    <div class="stripe-layer-badge tech-heading">Thriving</div>
+                </div>
+
+                <!-- NEW ACHIEVEMENT: National Physics / English Olympiad Rows -->
+                <div class="timeline-stripe">
+                    <div class="stripe-date f1-font">2023</div>
+                    <div class="stripe-core">
+                        <h4 class="f1-font">Bronze Medalist // National Olympiad Tiers</h4>
+                        <p>held by UNIVERSITY.ID National Analytics Grid:</p>
+                        <ul>
+                            <li><strong>National Physics Arena:</strong> Clinched Bronze Medal positioning while ranking #13 and #32 across provincial-level high-compute data pipelines.</li>
+                            <li><strong>National English Communication Arena:</strong> Clinched Bronze Medal positioning while scoring rank #21 at the provincial level.</li>
+                        </ul>
+                    </div>
+                    <div class="stripe-layer-badge tech-heading">HighSchool Thrive</div>
+                </div>
+
+                <!-- NEW ACHIEVEMENT: Athletics Rows -->
+                <div class="timeline-stripe">
+                    <div class="stripe-date f1-font">2018 - 2023</div>
+                    <div class="stripe-core">
+                        <h4 class="f1-font">Athletic Records // Martial Arts & Aquatics</h4>
+                        <p>Physical conditioning benchmarks mirroring professional motorsport stamina setups:</p>
+                        <ul>
+                            <li><strong>P3 Bronze Medalist (2023):</strong> 100-Meter Freestyle Aquatic Sprint — Jakarta Selatan Municipal Administration.</li>
+                            <li><strong>P2 Silver Medalist (2018):</strong> Karate Kata Putra division — Indonesian Youth and Sport Event Grid.</li>
+                            <li><strong>National Aquatic Championship Clearance (2021):</strong> Awarded Honor Credentials at the Indonesia Open Swimming Championship & KEJURPROV DKI Aquatics Arena.</li>
+                        </ul>
+                    </div>
+                    <div class="stripe-layer-badge tech-heading">EXERCISE PARAMETERS</div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Script Block for Core Interactive Controls (Don't Lose This!) -->
+    <script>
+        // Interactive Skill Box Open Array Logic
+        const mysteryBox = document.getElementById('mysteryBoxTrigger');
+        const unboxedDrawer = document.getElementById('unboxedDrawerGrid');
+
+        if(mysteryBox && unboxedDrawer) {
+            mysteryBox.addEventListener('click', () => {
+                if (unboxedDrawer.style.display === 'grid') {
+                    unboxedDrawer.style.display = 'none';
+                    mysteryBox.querySelector('p').textContent = 'OPEN DRAWER';
+                    mysteryBox.querySelector('i').className = 'fas fa-boxes';
+                } else {
+                    unboxedDrawer.style.display = 'grid';
+                    mysteryBox.querySelector('p').textContent = 'LOCK SYSTEM';
+                    mysteryBox.querySelector('i').className = 'fas fa-box-open';
+                    unboxedDrawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+        }
+
+        // Draggable Photo Corridor Interaction Logic (now coexists with auto-scroll)
+        const slider = document.getElementById('dragCorridor');
+        const track = document.getElementById('dragTrack');
+        
+        if(slider && track) {
+            let isDown = false;
+            let startX;
+            let scrollLeft = 0;
+
+            function pauseAutoScroll() {
+                track.classList.add('paused');
+            }
+
+            function resumeAutoScrollSoon() {
+                // Give a small grace period after releasing drag before resuming auto-scroll
+                clearTimeout(track._resumeTimer);
+                track._resumeTimer = setTimeout(() => {
+                    // Drop the inline transform so the CSS animation can take back over smoothly
+                    track.style.transform = '';
+                    track.classList.remove('paused');
+                }, 600);
+            }
+
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                pauseAutoScroll();
+                clearTimeout(track._resumeTimer);
+                startX = e.pageX - track.offsetLeft;
+                scrollLeft = getTransformX(track);
+            });
+
+            slider.addEventListener('mouseleave', () => {
+                if (isDown) resumeAutoScrollSoon();
+                isDown = false;
+            });
+            slider.addEventListener('mouseup', () => {
+                if (isDown) resumeAutoScrollSoon();
+                isDown = false;
+            });
+
+            slider.addEventListener('mousemove', (e) => {
+                if(!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 1.5; 
+                let targetX = scrollLeft + walk;
+                
+                const maxDelta = -(track.scrollWidth - slider.clientWidth);
+                if (targetX > 0) targetX = 0;
+                if (targetX < maxDelta) targetX = maxDelta;
+                
+                track.style.transform = `translateX(${targetX}px)`;
+            });
+
+            function getTransformX(element) {
+                const style = window.getComputedStyle(element);
+                const matrix = new WebKitCSSMatrix(style.transform);
+                return matrix.m41;
+            }
+        }
+
+        // Active Responsive Vector Mouse Tracking Engine — now expressive
+        const faceLayer = document.getElementById('dynamic-face');
+        const pupils = document.querySelectorAll('.f1-movable-pupil');
+        const avatarBox = document.getElementById('stickyRobotHead');
+        const avatarSvg = avatarBox ? avatarBox.querySelector('svg') : null;
+
+        // Lock in each pupil's original base position once, so it never gets confused later
+        pupils.forEach(pupil => {
+            pupil.dataset.baseCx = pupil.getAttribute('cx');
+            pupil.dataset.baseCy = pupil.getAttribute('cy');
+        });
+
+        if(avatarBox && faceLayer) {
+            window.addEventListener('mousemove', (e) => {
+                const rect = avatarBox.getBoundingClientRect();
+                const avatarX = rect.left + rect.width / 2;
+                const avatarY = rect.top + rect.height / 2;
+                
+                const deltaX = e.clientX - avatarX;
+                const deltaY = e.clientY - avatarY;
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY) || 1;
+                
+                const maxMoveFace = 4; 
+                const moveFaceX = (deltaX / distance) * Math.min(maxMoveFace, distance / 35);
+                const moveFaceY = (deltaY / distance) * Math.min(maxMoveFace, distance / 35);
+                
+                faceLayer.style.transform = `translate(${moveFaceX}px, ${moveFaceY}px)`;
+                
+                pupils.forEach(pupil => {
+                    const maxMovePupil = 1.8;
+                    const movePupilX = (deltaX / distance) * Math.min(maxMovePupil, distance / 25);
+                    const movePupilY = (deltaY / distance) * Math.min(maxMovePupil, distance / 25);
+                    const baseCx = parseFloat(pupil.dataset.baseCx);
+                    const baseCy = parseFloat(pupil.dataset.baseCy);
+                    pupil.setAttribute('cx', baseCx + movePupilX);
+                    pupil.setAttribute('cy', baseCy + movePupilY);
+                });
+
+                // Expressive whole-head tilt toward the cursor
+                if (avatarSvg) {
+                    const maxTilt = 10;
+                    const tiltY = (deltaX / distance) * Math.min(maxTilt, distance / 30);
+                    const tiltX = -(deltaY / distance) * Math.min(maxTilt, distance / 30);
+                    avatarSvg.style.transform = `perspective(400px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+                }
+            });
+
+            // Expressive: periodic blink
+            function blinkAvatar() {
+                faceLayer.style.transition = 'transform 0.08s ease';
+                const prevTransform = faceLayer.style.transform || '';
+                faceLayer.style.transform = prevTransform + ' scaleY(0.1)';
+                setTimeout(() => {
+                    faceLayer.style.transform = prevTransform;
+                }, 90);
+                setTimeout(blinkAvatar, 2800 + Math.random() * 3200);
+            }
+            setTimeout(blinkAvatar, 1500);
+
+            // Expressive: happy bounce reaction when clicked
+            avatarBox.addEventListener('click', () => {
+                if (!avatarSvg) return;
+                avatarSvg.style.transition = 'transform 0.25s ease';
+                avatarSvg.style.transform = 'scale(1.18) rotate(-6deg)';
+                setTimeout(() => {
+                    avatarSvg.style.transition = 'transform 0.15s var(--ease-f1)';
+                    avatarSvg.style.transform = 'scale(1) rotate(0deg)';
+                }, 250);
+            });
+        }
+    </script>
+</body>
+</html>
