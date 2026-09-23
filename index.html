@@ -5,28 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ezra Mayurga — Portfolio</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&family=Inter:wght@400;600;700&family=Syncopate:wght@700;900&display=swap" rel="stylesheet">
+    <!-- Preconnect ke CDN CDN utama untuk mempercepat loading font & icon -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&family=Inter:wght@400;500;600;700&family=Syncopate:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --amr-green: #004225;        
+            --amr-green: #002214;        
             --amr-lime: #CEFF00;         
-            --carbon-black: #050706;     
-            --pit-panel: #0E1210;        
-            --text-light: #F4F6F5;
-            --text-muted: #8E9993;
-            --ease-f1: cubic-bezier(0.25, 1, 0.5, 1);
+            --carbon-black: #030404;     
+            --pit-panel: #0a0d0b;        
+            --text-light: #ffffff;
+            --text-muted: #9ba8a2;
+            --ease-cinematic: cubic-bezier(0.19, 1, 0.22, 1);
+            --ease-in-out: cubic-bezier(0.8, 0, 0.2, 1);
         }
 
         * { 
             margin: 0; 
             padding: 0; 
             box-sizing: border-box; 
-        }
-        
-        html { 
-            scroll-behavior: smooth; 
         }
         
         body {
@@ -37,253 +37,434 @@
             position: relative;
         }
 
-        .f1-font { 
-            font-family: 'Racing Sans One', sans-serif; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            font-style: italic; 
-        }
-        
-        .tech-heading { 
-            font-family: 'Syncopate', sans-serif; 
-            text-transform: uppercase; 
-            letter-spacing: 4px; 
-        }
-
-        body::before {
-            content: ""; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100vw; 
+        body.intro-active {
+            overflow: hidden !important;
             height: 100vh;
-            background: linear-gradient(rgba(206, 255, 0, 0.015) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(206, 255, 0, 0.015) 1px, transparent 1px);
-            background-size: 40px 40px; 
-            animation: speedGrid 15s linear infinite; 
-            z-index: -1; 
-            pointer-events: none;
-        }
-        
-        @keyframes speedGrid { 
-            0% { background-position: 0 0; } 
-            100% { background-position: 40px 40px; } 
         }
 
-        /* Hero Layout & Draggable Section */
+        /* === GLOBAL VANTA BIRDS BACKGROUND === */
+        #vanta-birds-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        #master-canvas-node {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* === 1. Preloader === */
+        #cinematic-intro {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            will-change: opacity;
+        }
+        
+        .intro-text-wrapper {
+            overflow: hidden;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .intro-headline {
+            font-family: 'Racing Sans One', sans-serif;
+            font-size: clamp(2rem, 8vw, 6rem);
+            color: #fff;
+            letter-spacing: clamp(2px, 1vw, 5px);
+            opacity: 0;
+            transform: scale(0.9) translateY(40px);
+            animation: introReveal 3.2s var(--ease-in-out) forwards;
+            white-space: nowrap;
+        }
+        
+        .intro-sub {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(0.6rem, 2vw, 1.2rem);
+            color: var(--amr-lime);
+            letter-spacing: clamp(4px, 2vw, 12px);
+            margin-top: 15px;
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+            animation: introReveal 3.2s var(--ease-in-out) 0.3s forwards;
+        }
+
+        @keyframes introReveal {
+            0% { opacity: 0; transform: scale(0.9) translateY(40px); filter: blur(10px); }
+            30% { opacity: 1; filter: blur(0px); transform: scale(1.05) translateY(0); }
+            80% { opacity: 1; transform: scale(1.1) translateY(0); filter: blur(0px); }
+            100% { opacity: 0; transform: scale(1.3) translateY(-20px); filter: blur(15px); }
+        }
+
+        .f1-font { font-family: 'Racing Sans One', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-style: italic; }
+        .tech-heading { font-family: 'Syncopate', sans-serif; text-transform: uppercase; letter-spacing: 4px; }
+
+        /* === Hero Section === */
         .hero-section { 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-            border-bottom: 2px solid rgba(255,255,255,0.03); 
+            min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; 
+            border-bottom: 2px solid rgba(255,255,255,0.03); overflow: hidden; position: relative;
+            background: rgba(3, 4, 4, 0.5);
+            z-index: 2;
         }
 
         .f1-photo-corridor { 
-            width: 100%; 
-            height: 55vh; 
-            overflow: hidden; 
-            background: #000; 
-            border-bottom: 4px solid var(--amr-lime); 
-            position: relative;
-            cursor: grab;
-            user-select: none;
-        }
-        
-        .f1-photo-corridor:active { 
-            cursor: grabbing; 
-        }
-        
-        .f1-marquee-track { 
-            display: flex; 
-            width: max-content; 
-            height: 100%; 
+            width: 100%; height: 50vh; overflow: hidden; background: #000; 
+            border-bottom: 4px solid var(--amr-lime); position: relative;
             will-change: transform;
-            transition: transform 0.1s ease-out;
         }
         
-        .f1-photo-card { 
-            width: 35vw; 
-            height: 100%; 
-            flex-shrink: 0; 
-            position: relative; 
-            background: #111; 
-            overflow: hidden; 
-            border-right: 1px solid rgba(255,255,255,0.1);
+        .f1-marquee-track { display: flex; width: max-content; height: 100%; }
+        .f1-photo-card { width: 35vw; height: 100%; flex-shrink: 0; position: relative; background: #111; overflow: hidden; border-right: 1px solid rgba(255,255,255,0.1); }
+        .f1-photo-card img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%) contrast(120%); transition: transform 0.8s var(--ease-cinematic), filter 0.8s var(--ease-cinematic); }
+        
+        .f1-photo-card:hover img { filter: grayscale(0%) contrast(125%); transform: scale(1.08); }
+        .f1-photo-card::after { content:""; position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 40%); z-index: 1; pointer-events: none; }
+        .f1-photo-card::before { content: "MOHAN"; position: absolute; bottom: 20px; left: 20px; font-family: 'Syncopate', sans-serif; font-weight: 900; font-size: 0.75rem; background: var(--carbon-black); color: var(--amr-lime); padding: 6px 14px; z-index: 2; border-left: 3px solid var(--amr-lime); letter-spacing: 2px; }
+
+        .hero-details { padding: 40px 8% 80px 8%; background: linear-gradient(to top, rgba(2,3,2,0.85) 90%, transparent); flex-grow: 1; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 5; }
+        .hero-details h1 { font-size: clamp(3.5rem, 8vw, 7rem); color: #FFF; line-height: 0.85; margin-bottom: 15px; letter-spacing: -3px; text-shadow: 0 10px 40px rgba(255,255,255,0.1); }
+        .hero-details h2 { font-size: clamp(1rem, 3vw, 1.5rem); color: var(--amr-lime); margin-bottom: 30px; letter-spacing: 5px; font-weight: 900; }
+        .hero-details p { font-size: clamp(1rem, 2vw, 1.25rem); line-height: 1.8; color: var(--text-muted); max-width: 65%; margin-bottom: 45px; font-weight: 500; }
+
+        .f1-telemetry-contacts { display: flex; flex-wrap: wrap; gap: 40px; font-size: 1.05rem; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 30px; max-width: 80%; }
+        .f1-telemetry-contacts div { display: flex; align-items: center; gap: 12px; }
+        .f1-telemetry-contacts i { color: var(--amr-lime); font-size: 1.2rem; pointer-events: none; }
+        .f1-redirect-anchor { color: var(--text-light); text-decoration: none; font-weight: 600; transition: color 0.3s; display: inline-block; cursor: pointer !important;}
+        .f1-redirect-anchor:hover { color: var(--amr-lime); }
+
+        /* Floating Avatar */
+        .f1-robot-brand { position: fixed; top: 35px; right: 35px; width: 100px; height: 100px; z-index: 999; animation: floatAvatar 6s ease-in-out infinite; cursor: pointer !important;}
+        @keyframes floatAvatar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        .f1-robot-brand svg { transition: transform 0.15s; transform-origin: center; filter: drop-shadow(0 0 15px rgba(206,255,0,0.1)); cursor: pointer !important;}
+
+        /* === DESKTOP MONITOR SKILLS SECTION === */
+        .skills-section { 
+            background: rgba(3, 4, 4, 0.3); 
+            padding: 90px 8%; 
+            border-bottom: 2px solid rgba(255,255,255,0.03); 
+            text-align: center; 
         }
 
-        @media (max-width: 992px) { 
-            .f1-photo-card { width: 80vw; } 
+        .monitor-frame {
+            max-width: 1050px;
+            margin: 30px auto 0 auto;
+            background: rgba(16, 20, 18, 0.95);
+            border: 4px solid var(--amr-lime);
+            border-radius: 18px 18px 8px 8px;
+            padding: 18px;
+            box-shadow: 0 0 35px rgba(206, 255, 0, 0.2), 0 20px 50px rgba(0,0,0,0.9);
+            position: relative;
         }
 
-        .f1-photo-card img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            display: block; 
-            filter: grayscale(15%) contrast(110%); 
-            pointer-events: none; 
-            transition: all 0.3s var(--ease-f1); 
-        }
-        
-        .f1-photo-card:hover img { 
-            filter: grayscale(0%) contrast(125%); 
-            transform: scale(1.02); 
-        }
-        
-        .f1-photo-card::before { 
-            content: "MOHAN"; 
-            position: absolute; 
-            bottom: 20px; 
-            left: 20px; 
-            font-family: 'Syncopate', sans-serif; 
-            font-weight: 900; 
-            font-size: 0.75rem; 
-            background: var(--carbon-black); 
-            color: var(--amr-lime); 
-            padding: 6px 14px; 
-            z-index: 2; 
-            border-left: 3px solid var(--amr-lime); 
-            letter-spacing: 2px; 
-        }
-
-        .hero-details { 
-            padding: 40px 6% 60px 6%; 
-            background: linear-gradient(to top, #050706 85%, transparent); 
-            flex-grow: 1; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-        }
-        
-        /* Interactive Floating Avatar */
-        .f1-robot-brand {
-            position: fixed;
-            top: 25px; 
-            right: 25px; 
-            width: 120px; 
-            height: 120px;
-            overflow: visible;
-            border: none;
-            background: rgba(255, 255, 255, 0.01);
-            backdrop-filter: blur(2px);
-            box-shadow: none;
-            z-index: 999;
+        .monitor-top-bar {
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 34, 20, 0.9);
+            border-bottom: 1px solid rgba(206, 255, 0, 0.3);
+            padding: 8px 15px;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.75rem;
+            color: var(--amr-lime);
+            font-family: 'Syncopate', sans-serif;
+            margin-bottom: 12px;
+        }
+
+        .monitor-window-dots { display: flex; gap: 6px; }
+        .monitor-window-dots span { width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); }
+
+        .monitor-screen {
+            background: radial-gradient(circle at center, rgba(10, 20, 15, 0.95) 0%, rgba(3, 6, 4, 0.98) 100%);
+            border: 1px solid rgba(206,255,0,0.25);
+            border-radius: 8px;
+            padding: 25px;
+            min-height: 380px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+            gap: 20px;
+            align-content: start;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        .desktop-app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
+            padding: 14px 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.25s var(--ease-cinematic), background 0.25s, border-color 0.25s, box-shadow 0.25s;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
-        .hero-details h1 { font-size: 6.5rem; color: #FFF; line-height: 0.85; margin-bottom: 20px; letter-spacing: -2px; width: 70%; }
-        .hero-details h2 { font-size: 1.6rem; color: var(--amr-lime); margin-bottom: 25px; letter-spacing: 4px; font-weight: 900; }
-        .hero-details p { font-size: 1.2rem; line-height: 1.8; color: var(--text-muted); max-width: 70%; margin-bottom: 45px; }
+        .desktop-app-icon:hover {
+            background: rgba(206, 255, 0, 0.15);
+            border-color: var(--amr-lime);
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 10px 22px rgba(206, 255, 0, 0.25);
+        }
 
-        .f1-telemetry-contacts { 
+        .desktop-app-icon i {
+            font-size: 2.2rem;
+            color: var(--amr-lime);
+            margin-bottom: 8px;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .desktop-app-icon:hover i {
+            transform: scale(1.1);
+            color: #ffffff;
+        }
+
+        .desktop-app-icon span {
+            font-size: 0.65rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-align: center;
+            font-family: 'Syncopate', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .monitor-stand {
+            width: 140px; height: 22px; background: #18221c;
+            margin: 0 auto; border-bottom: 3px solid var(--amr-lime); border-radius: 0 0 4px 4px;
+        }
+
+        .monitor-base {
+            width: 260px; height: 10px; background: #0d120f;
+            margin: 0 auto; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+        }
+
+        /* === PROJECT SECTION (HORIZONTAL SCROLL) === */
+        .projects-section { 
+            position: relative; 
+            background: transparent;
+            overflow: visible;
+        }
+
+        .projects-sticky { 
+            position: sticky; 
+            top: 0; 
+            height: 100vh; 
+            width: 100vw; 
+            overflow: hidden; 
             display: flex; 
-            flex-wrap: wrap; 
+            align-items: center; 
+            perspective: 1200px; 
+            z-index: 2;
+        }
+        
+        .projects-header-floating { position: absolute; top: 60px; left: 8%; z-index: 10; width: 100%; pointer-events: none;}
+        .projects-header-floating h2 { font-size: clamp(2rem, 4vw, 3rem); color: #FFF; border-left: 6px solid var(--amr-lime); padding-left: 20px; text-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+
+        .projects-linear-stack { 
+            display: flex; 
+            flex-direction: row; 
+            gap: 6vw; 
+            padding: 0 8vw; 
+            margin-top: 80px; 
+            width: max-content; 
+            will-change: transform; 
+            align-items: center; 
+            box-sizing: border-box;
+        }
+
+        .project-giant-card { 
+            background: rgba(5, 7, 6, 0.92); 
+            border: 1px solid rgba(206, 255, 0, 0.2); 
+            display: grid; 
+            grid-template-columns: 480px 520px; 
             gap: 40px; 
-            font-size: 1.05rem; 
-            border-top: 1px dashed rgba(255,255,255,0.08); 
-            padding-top: 30px; 
-            max-width: 70%; 
+            padding: 45px; 
+            width: max-content; 
+            flex-shrink: 0; 
+            transform-style: preserve-3d;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+            box-sizing: border-box;
         }
+
+        .img-container { background: #000; padding: 5px; border: 1px solid rgba(255,255,255,0.05); height: fit-content; overflow: hidden; transform: translateZ(40px); }
+        .img-container img { width: 100%; height: 100%; min-height: 360px; object-fit: cover; display: block; transition: transform 1.2s var(--ease-cinematic); }
+        .project-giant-card:hover .img-container img { transform: scale(1.08); }
         
-        .f1-telemetry-contacts div { display: flex; align-items: center; gap: 12px; }
-        .f1-telemetry-contacts i { color: var(--amr-lime); font-size: 1.2rem; }
-        .f1-redirect-anchor { color: var(--text-light); text-decoration: none; font-weight: 600; transition: all 0.3s var(--ease-f1); border-bottom: 1px solid transparent; }
-        .f1-redirect-anchor:hover { color: var(--amr-lime); border-bottom-color: var(--amr-lime); }
+        .project-content-data { display: flex; flex-direction: column; justify-content: center; transform: translateZ(30px); }
+        .project-content-data h3 { font-size: 2rem; color: var(--amr-lime); margin-bottom: 15px; }
+        .type-badge { font-size: 0.8rem; color: #000; background: var(--amr-lime); padding: 6px 14px; display: inline-block; margin-bottom: 25px; width: max-content; font-weight: bold; }
+        .project-content-data p { font-size: 1.05rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 30px; }
+        .project-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; font-size: 0.95rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 25px; margin-bottom: 30px; }
+        .detail-block strong { color: #FFF; display: block; margin-bottom: 8px; font-size: 0.85rem; letter-spacing: 1px; }
+        .tech-tags-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 35px; transform: translateZ(10px); }
+        .tech-tags-row span { font-size: 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 5px 16px; color: var(--text-light); }
+        .project-action-link { color: var(--text-light); text-decoration: none; font-size: 0.9rem; font-weight: bold; display: inline-flex; align-items: center; gap: 10px; width: max-content; padding-bottom: 5px; border-bottom: 2px solid var(--amr-lime); transition: color 0.3s, letter-spacing 0.3s; transform: translateZ(20px); }
+        .project-action-link:hover { color: var(--amr-lime); letter-spacing: 2px; }
 
-        /* Skills Modular Grid Section */
-        .skills-section { background: var(--pit-panel); padding: 120px 8%; border-bottom: 2px solid rgba(255,255,255,0.03); text-align: center; }
-        .skills-wrapper { max-width: 1000px; margin: 0 auto; }
-        .skills-mystery-box { background: linear-gradient(135deg, var(--amr-green), #002112); border: 2px solid var(--amr-lime); padding: 55px 40px; cursor: pointer; transition: all 0.3s var(--ease-f1); box-shadow: 0 30px 60px rgba(0,0,0,0.7); }
-        .skills-mystery-box:hover { transform: translateY(-3px); box-shadow: 0 35px 70px rgba(206,255,0,0.15); }
-        .skills-mystery-box i { font-size: 4rem; color: var(--amr-lime); margin-bottom: 15px; }
+        /* === 2-COLUMN EXPERIENCE & ORGANIZATION LAYOUT === */
+        .timeline-section { 
+            padding: 120px 8%; 
+            background: rgba(4, 5, 4, 0.15); 
+            border-bottom: 2px solid rgba(255,255,255,0.03); 
+        }
+        .section-header { margin-bottom: 60px; border-left: 5px solid var(--amr-lime); padding-left: 20px; }
+        .section-header h2 { font-size: clamp(2rem, 4vw, 3rem); color: #FFF; text-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+
+        .exp-org-two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+
+        .column-box h3 {
+            font-size: 1.5rem;
+            color: var(--amr-lime);
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(206, 255, 0, 0.3);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+
+        .linkedin-timeline-container { position: relative; padding-left: 30px; }
+        .linkedin-timeline-container::before { content: ''; position: absolute; top: 0; bottom: 0; left: 15px; width: 2px; background: rgba(255,255,255,0.15); }
+
+        .li-timeline-item { position: relative; margin-bottom: 40px; display: flex; align-items: flex-start; gap: 20px; }
+        .li-timeline-item:last-child { margin-bottom: 0; }
         
-        .skills-unboxed-drawer { 
-            display: none; 
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-            gap: 15px; 
-            margin-top: 50px; 
+        .li-logo { 
+            width: 50px; height: 50px; flex-shrink: 0; 
+            background: #080c0a; border: 1px solid rgba(206,255,0,0.3); 
+            position: relative; z-index: 2; margin-left: -25px;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+            transition: transform 0.3s, border-color 0.3s;
         }
+        .li-timeline-item:hover .li-logo { transform: scale(1.05); border-color: var(--amr-lime); }
+        .li-logo i { font-size: 1.5rem; color: var(--amr-lime); }
+
+        .li-content { 
+            background: rgba(10, 15, 12, 0.92); 
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 24px;
+            flex-grow: 1;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .li-timeline-item:hover .li-content { background: rgba(14, 22, 17, 0.95); border-color: rgba(206,255,0,0.4); }
         
-        .skill-item-node { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 25px 15px; text-align: center; font-weight: bold; transition: all 0.3s var(--ease-f1); }
-        .skill-item-node:hover { background: var(--amr-lime); color: var(--carbon-black); transform: scale(1.05); }
-        .skill-item-node i { display: block; font-size: 1.8rem; margin-bottom: 10px; color: var(--amr-lime); }
-        .skill-item-node:hover i { color: var(--carbon-black); }
-        .skill-item-node span.skill-category { display: block; font-size: 0.65rem; color: var(--text-muted); margin-top: 5px; letter-spacing: 1px; }
-        .skill-item-node:hover span.skill-category { color: var(--carbon-black); opacity: 0.8; }
+        .li-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;}
+        .li-title h4 { font-size: 1.2rem; color: #FFF; margin-bottom: 4px; }
+        .li-company { font-size: 0.95rem; color: var(--amr-lime); font-weight: 500; }
+        .li-date { font-size: 0.85rem; color: var(--text-muted); }
+        
+        .li-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+        .li-desc ul { margin-top: 10px; margin-left: 18px; }
+        .li-desc li { margin-bottom: 6px; }
 
-        /* Project Engine Blocks */
-        .projects-section { padding: 120px 8%; border-bottom: 2px solid rgba(255,255,255,0.03); }
-        .section-header { margin-bottom: 70px; border-left: 5px solid var(--amr-lime); padding-left: 20px; }
-        .section-header h2 { font-size: 2.2rem; color: #FFF; }
-        .projects-linear-stack { display: flex; flex-direction: column; gap: 60px; max-width: 1400px; margin: 0 auto; }
-        .project-giant-card { background: #0B0E0D; border: 1px solid rgba(255,255,255,0.03); display: grid; grid-template-columns: 1.15fr 1.85fr; gap: 40px; padding: 40px; transition: all 0.3s var(--ease-f1); }
-        .project-giant-card:hover { border-color: var(--amr-lime); background: #101513; }
-        .img-container { background: #000; padding: 4px; border: 1px solid rgba(255,255,255,0.08); height: fit-content; }
-        .img-container img { width: 100%; height: 230px; object-fit: cover; display: block; }
-        .project-content-data h3 { font-size: 2rem; color: var(--amr-lime); margin-bottom: 12px; }
-        .project-content-data .type-badge { font-size: 0.75rem; color: #FFF; background: var(--amr-green); padding: 5px 12px; display: inline-block; margin-bottom: 20px; }
-        .project-content-data p { font-size: 1.05rem; line-height: 1.7; color: var(--text-muted); margin-bottom: 25px; }
-        .project-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; font-size: 0.95rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 20px; margin-bottom: 25px; }
-        .detail-block strong { color: #FFF; display: block; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 1px; }
-        .tech-tags-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
-        .tech-tags-row span { font-size: 0.75rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 4px 14px; color: var(--text-light); }
-        .project-action-link { color: var(--amr-lime); text-decoration: none; font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 10px; }
-
-        /* Experience Timeline Layout */
-        .timeline-section { padding: 120px 8%; background: #060807; border-bottom: 2px solid rgba(255,255,255,0.03); }
-        .timeline-matrix { display: flex; flex-direction: column; gap: 20px; max-width: 1400px; margin: 0 auto; }
-        .timeline-stripe { background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); padding: 40px; display: grid; grid-template-columns: 1.3fr 2.7fr 1fr; align-items: flex-start; gap: 30px; transition: all 0.3s var(--ease-f1); }
-        .timeline-stripe:hover { background: var(--amr-green); border-color: var(--amr-lime); }
-        .stripe-date { font-size: 1.1rem; color: var(--amr-lime); }
-        .stripe-core h4 { font-size: 1.5rem; color: #FFF; margin-bottom: 10px; }
-        .stripe-core p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; }
-        .stripe-core ul { margin-top: 15px; margin-left: 20px; color: var(--text-muted); font-size: 1rem; line-height: 1.7; }
-        .timeline-stripe:hover .stripe-core p, .timeline-stripe:hover .stripe-core ul { color: var(--text-light); }
-        .stripe-layer-badge { justify-self: end; font-size: 0.75rem; background: #000; padding: 6px 14px; color: var(--text-light); border: 1px solid rgba(255,255,255,0.1); width: max-content; }
-
-        /* Dynamic Parallax Styling */
-        #dynamic-face {
-            transition: transform 0.1s ease-out;
-            will-change: transform;
+        /* === CERTIFICATIONS & LINKEDIN PROOF SECTION === */
+        .cert-grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
         }
 
-        /* Avatar expressive head tilt wrapper */
-        .f1-robot-brand svg {
-            transition: transform 0.15s var(--ease-f1);
-            will-change: transform;
+        .cert-card-node {
+            background: rgba(10, 15, 12, 0.92);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            transition: transform 0.3s, border-color 0.3s, background 0.3s;
+        }
+        .cert-card-node:hover {
+            border-color: var(--amr-lime);
+            transform: translateY(-5px);
+            background: rgba(14, 22, 17, 0.95);
         }
 
-        /* Auto-scrolling photo corridor */
-        .f1-marquee-track.auto-scroll {
-            animation: f1AutoScrollRight 22s linear infinite;
-        }
+        .cert-card-node .cert-issuer { color: var(--amr-lime); font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; }
+        .cert-card-node h4 { font-size: 1.1rem; color: #fff; margin: 8px 0; }
+        .cert-card-node .cert-date { font-size: 0.85rem; color: var(--text-muted); }
+        .cert-card-node .cert-id { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 8px; }
 
-        .f1-marquee-track.auto-scroll.paused {
-            animation-play-state: paused;
+        .linkedin-proof-banner {
+            background: linear-gradient(135deg, rgba(0, 34, 20, 0.92), rgba(3, 4, 4, 0.95));
+            border: 1px solid var(--amr-lime);
+            border-radius: 12px;
+            padding: 35px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
+        .linkedin-proof-banner h3 { font-size: 1.5rem; color: #fff; margin-bottom: 12px; }
+        .linkedin-proof-banner p { color: var(--text-muted); font-size: 1rem; margin-bottom: 25px; }
+        .linkedin-btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #0077b5;
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s, background 0.3s;
+        }
+        .linkedin-btn-action:hover { background: #005582; transform: scale(1.05); }
 
-        @keyframes f1AutoScrollRight {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+        .reveal-zoom {
+            opacity: 0;
+            transform: scale(0.9) translateY(40px);
+            transition: opacity 1s var(--ease-cinematic), transform 1s var(--ease-cinematic);
         }
+        .reveal-zoom.active { opacity: 1; transform: scale(1) translateY(0); }
+
+        .f1-marquee-track.auto-scroll { animation: f1AutoScrollRight 35s linear infinite; }
+        @keyframes f1AutoScrollRight { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         @media (max-width: 992px) {
-            .project-giant-card, .timeline-stripe { grid-template-columns: 1fr; }
-            .stripe-layer-badge { justify-self: start; }
-            .hero-details h1, .hero-details p, .f1-telemetry-contacts { width: 100%; max-width: 100%; }
-            .f1-robot-brand { position: relative; top: 0; right: 0; margin: 30px auto; width: 110px; height: 110px; }
+            .exp-org-two-column { grid-template-columns: 1fr; }
+            .project-giant-card { grid-template-columns: 1fr; width: 85vw; padding: 30px; }
+            .hero-details p, .f1-telemetry-contacts { width: 100%; max-width: 100%; }
+            .projects-section { height: auto !important; }
+            .projects-sticky { position: relative; height: auto; display: block; padding: 80px 0; }
+            .projects-linear-stack { flex-direction: column; width: 100%; padding: 0 5vw; margin-top: 20px; transform: none !important; }
+            .projects-header-floating { position: relative; top: 0; left: 5vw; margin-bottom: 30px; }
+            .f1-robot-brand { display: none; }
         }
     </style>
 </head>
-<body>
+<body class="intro-active">
+
+    <!-- GLOBAL VANTA BIRDS BACKGROUND -->
+    <div id="vanta-birds-bg"></div>
+
+    <!-- Preloader -->
+    <div id="cinematic-intro">
+        <div class="intro-text-wrapper"><h1 class="intro-headline">EZRA MAYURGA</h1></div>
+        <div class="intro-text-wrapper"><p class="intro-sub">COMPUTER SCIENCE</p></div>
+        <div class="intro-text-wrapper"><p class="intro-sub">INTELLIGENCE SYSTEMS</p></div>
+    </div>
 
     <div id="master-canvas-node">
 
-        <!-- Floating Minimalist Head Vector -->
-        <div class="f1-robot-brand" id="stickyRobotHead">
+        <!-- Avatar Float -->
+        <div class="f1-robot-brand magnetic" id="stickyRobotHead">
             <svg viewBox="0 0 100 100" width="100%" height="100%" style="display: block; overflow: visible;">
                 <g id="static-head-base">
                     <path d="M32 46 C 32 64, 40 73, 50 73 C 60 73, 68 64, 68 46" fill="none" stroke="#F4F6F5" stroke-width="2.5" stroke-linecap="round"/>
@@ -296,454 +477,609 @@
                     <path d="M35 48 Q 40 45 45 48 Q 40 52 35 48 Z" fill="none" stroke="#F4F6F5" stroke-width="1.8" stroke-linejoin="round"/>
                     <path d="M55 48 Q 60 45 65 48 Q 60 52 55 48 Z" fill="none" stroke="#F4F6F5" stroke-width="1.8" stroke-linejoin="round"/>
                     <path d="M50 51 L49 55 L52 55" fill="none" stroke="#F4F6F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <line x1="33" y1="53" x2="35" y2="51" stroke="#F4F6F5" stroke-width="1" />
-                    <line x1="36" y1="53" x2="38" y2="51" stroke="#F4F6F5" stroke-width="1" />
-                    <line x1="62" y1="53" x2="64" y2="51" stroke="#F4F6F5" stroke-width="1" />
-                    <line x1="65" y1="53" x2="67" y2="51" stroke="#F4F6F5" stroke-width="1" />
-                    <path d="M46 61 Q 50 64 54 61" fill="none" stroke="#F4F6F5" stroke-width="2" stroke-linecap="round"/>
                     <circle class="f1-movable-pupil" cx="40" cy="48.5" r="2.5" fill="#CEFF00" />
                     <circle class="f1-movable-pupil" cx="60" cy="48.5" r="2.5" fill="#CEFF00" />
                 </g>
             </svg>
         </div>
 
-        <!-- Section Hero Structure -->
         <section class="hero-section">
             <div class="f1-photo-corridor" id="dragCorridor">
-                <div class="f1-marquee-track auto-scroll" id="dragTrack">
-                    <div class="f1-photo-card"><img src="profile/mohan_3.JPG" alt="Asset 1"></div>
-                    <div class="f1-photo-card"><img src="profile/mohan_1.jpg" alt="Asset 2"></div>
-                    <div class="f1-photo-card"><img src="profile/mohan_2.JPG" alt="Asset 3"></div>
-                    <div class="f1-photo-card"><img src="profile/mohan_3.JPG" alt="Asset 1 duplicate"></div>
-                    <div class="f1-photo-card"><img src="profile/mohan_1.jpg" alt="Asset 2 duplicate"></div>
-                    <div class="f1-photo-card"><img src="profile/mohan_2.JPG" alt="Asset 3 duplicate"></div>
+                <div class="f1-marquee-track auto-scroll">
+                    <div class="f1-photo-card"><img src="profile/mohan_3.JPG" alt="Asset 1" loading="lazy" decoding="async"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_1.jpg" alt="Asset 2" loading="lazy" decoding="async"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_2.JPG" alt="Asset 3" loading="lazy" decoding="async"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_3.JPG" alt="Asset 1" loading="lazy" decoding="async"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_1.jpg" alt="Asset 2" loading="lazy" decoding="async"></div>
+                    <div class="f1-photo-card"><img src="profile/mohan_2.JPG" alt="Asset 3" loading="lazy" decoding="async"></div>
                 </div>
             </div>
 
             <div class="hero-details">
-                <span class="f1-font" style="font-size: 1.8rem; color: var(--amr-lime); display: block; margin-bottom: 15px; font-weight: 900;"> focused on INTELLIGENCE SYSTEMS </span>
-                <h1 class="f1-font">EZRA MAYURGA</h1>
-                <h2 class="tech-heading">Computer Science Student // BINUS University</h2>
-                <p>
-                    Computer Science student at BINUS University specializing in Intelligence Systems. Highly adaptive development background working with deep structural learning models, computational vision engines, and scalable data pipeline optimization scripts. Currently deployed as the elected President of BVoice Radio to sync enterprise-wide communication layers, sponsorship frameworks, and off-air brand recognition plans.
+                <span class="f1-font reveal-zoom" style="font-size: 1.5rem; color: var(--amr-lime); display: block; margin-bottom: 20px;">// DATA SCIENCE & AI</span>
+                <h1 class="f1-font reveal-zoom" style="transition-delay: 0.1s;">EZRA MAYURGA</h1>
+                <h2 class="tech-heading reveal-zoom" style="transition-delay: 0.2s;">Computer Science Student / BINUS University</h2>
+                <p class="reveal-zoom" style="transition-delay: 0.3s;">
+                    Specializing in Intelligence Systems, currently gaining hands-on data science experience as a Data Science and Analytics Intern. Skilled in building end-to-end data pipelines, forecasting models, and interactive dashboards that translate raw data into actionable business decisions. Authored & presented an IEEE-format research paper comparing Classical ML vs. Deep Learning for stock price prediction (ICORIS 2026).
                 </p>
                 
-                <div class="f1-telemetry-contacts">
-                    <div><i class="fas fa-envelope"></i><span>ezra.mayurga@gmail.com</span></div>
-                    <div><i class="fas fa-phone"></i><span>081317676980</span></div>
-                    <div><i class="fab fa-instagram"></i><a href="https://instagram.com/ezruroww" target="_blank" class="f1-redirect-anchor">@ezruroww</a></div>
-                    <div><i class="fab fa-linkedin"></i><a href="https://linkedin.com/in/ezra-mayurga-44746021a" target="_blank" class="f1-redirect-anchor">Ezra Mayurga</a></div>
-                    <div><i class="fab fa-github"></i><a href="https://github.com/EzraMayurga" target="_blank" class="f1-redirect-anchor">EzraMayurga</a></div>
-                    <div><i class="fas fa-envelope"></i><span>ezra.mayurga@binus.ac.id</span></div>
+                <div class="f1-telemetry-contacts reveal-zoom" style="transition-delay: 0.4s;">
+                    <div class="magnetic"><i class="fas fa-envelope"></i><a href="mailto:ezra.mayurga03@gmail.com" class="f1-redirect-anchor">ezra.mayurga03@gmail.com</a></div>
+                    <div class="magnetic"><i class="fas fa-phone"></i><span>+6281317676980</span></div>
+                    <div class="magnetic"><i class="fas fa-map-marker-alt"></i><span>South Tangerang, Indonesia</span></div>
+                    <div class="magnetic"><i class="fab fa-linkedin"></i><a href="https://www.linkedin.com/in/ezra-mayurga-44746021a/" target="_blank" rel="noopener noreferrer" class="f1-redirect-anchor">Ezra Mayurga</a></div>
+                    <div class="magnetic"><i class="fab fa-github"></i><a href="https://github.com/EzraMayurga" target="_blank" rel="noopener noreferrer" class="f1-redirect-anchor">EzraMayurga</a></div>
                 </div>
             </div>
         </section>
 
-        <!-- Technical Skill Inventory Drawer -->
+        <!-- DESKTOP MONITOR SKILLS SECTION -->
         <section class="skills-section">
-            <div class="skills-wrapper">
-                <div class="section-header" style="text-align: center; margin-bottom: 40px; border-left: none; padding-left: 0;">
-                    <h2 class="f1-font" style="font-size: 2.5rem;">// SKILL INVENTORY </h2>
-                    <p class="f1-font" style="font-size: 1.1rem; color: var(--amr-lime); margin-top: 5px;"> Try clicking the storage module box below !</p>
+            <div class="section-header reveal-zoom" style="text-align: center; margin-bottom: 25px; border:none; padding:0;">
+                <h2 class="f1-font" style="font-size: 3rem; text-shadow: 0 10px 30px rgba(0,0,0,0.8);">// SKILL INVENTORY</h2>
+            </div>
+            
+            <div class="monitor-frame reveal-zoom">
+                <div class="monitor-top-bar">
+                    <div class="monitor-window-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div>DESKTOP_OS_V5.0 // CS_ACADEMIC_SYS</div>
+                    <div><i class="fas fa-wifi"></i> ONLINE</div>
+                </div>
+
+                <div class="monitor-screen">
+                    <div class="desktop-app-icon"><i class="fab fa-python"></i><span>PYTHON</span></div>
+                    <div class="desktop-app-icon"><i class="fas fa-code"></i><span>C / C++</span></div>
+                    <div class="desktop-app-icon"><i class="fab fa-java"></i><span>JAVA</span></div>
+                    <div class="desktop-app-icon"><i class="fas fa-sitemap"></i><span>DATA STRUCT</span></div>
+                    <div class="desktop-app-icon"><i class="fas fa-database"></i><span>SQL / DB</span></div>
+                    <div class="desktop-app-icon"><i class="fab fa-git-alt"></i><span>GIT & GITHUB</span></div>
+                    <div class="desktop-app-icon"><i class="fas fa-brain"></i><span>MACHINE LRN</span></div>
+                    <div class="desktop-app-icon"><i class="fas fa-network-wired"></i><span>DEEP LEARNING</span></div>
+                    <div class="desktop-app-icon"><i class="fas fa-eye"></i><span>OPENCV</span></div>
+                    <div class="desktop-app-icon"><i class="fas fa-comments"></i><span>NLP & REGEX</span></div>
+                    <div class="desktop-app-icon"><i class="fas fa-chart-line"></i><span>FORECASTING</span></div>
+                    <div class="desktop-app-icon"><i class="fas fa-shield-alt"></i><span>NET SECURITY</span></div>
+                    <div class="desktop-app-icon"><i class="fas fa-bolt"></i><span>FASTAPI</span></div>
+                    <div class="desktop-app-icon"><i class="fab fa-microsoft"></i><span>AZURE AI</span></div>
+                </div>
+            </div>
+            <div class="monitor-stand"></div>
+            <div class="monitor-base"></div>
+        </section>
+
+        <!-- PROJECT SECTION (HORIZONTAL SCROLL) -->
+        <section class="projects-section" id="projectsSection">
+            <div class="projects-sticky">
+                <div class="projects-header-floating">
+                    <h2 class="f1-font reveal-zoom">// PROJECT RELEASES</h2>
                 </div>
                 
-                <div class="skills-mystery-box" id="mysteryBoxTrigger">
-                    <i class="fas fa-boxes"></i>
-                    <h3 class="tech-heading" style="font-size:0.9rem; color: #FFF; margin-bottom: 5px;">CORES</h3>
-                    <p class="f1-font" style="font-size: 1.5rem; color: var(--amr-lime);">OPEN DRAWER</p>
-                </div>
+                <div class="projects-linear-stack" id="projectsTrack">
+                    <!-- GOLF -->
+                    <div class="project-giant-card tilt-3d">
+                        <div class="img-container"><img src="profile/Golf.png" alt="Golf Project Image" loading="lazy" decoding="async"></div>
+                        <div class="project-content-data">
+                            <div>
+                                <span class="type-badge f1-font">AI / Software Engineering</span>
+                                <h3>PKM-KC - Golf Helper Identifier</h3>
+                                <p>An AI-powered golf swing analysis platform designed to evaluate posture and performance using computer vision and multimodal AI.</p>
+                                <div class="project-details-grid">
+                                    <div class="detail-block"><strong class="tech-heading">ROLE</strong><span>Team Lead & System Architect</span></div>
+                                    <div class="detail-block"><strong class="tech-heading">MODELS</strong><span>YOLOv8-Pose + Gemini 2.5 Flash</span></div>
+                                </div>
+                            </div>
+                            <div class="tech-tags-row tech-heading"><span>Python</span><span>YOLOv8-Pose</span><span>Gemini 2.5 Flash</span></div>
+                            <a href="https://golf-helper-identifier.vercel.app" target="_blank" rel="noopener noreferrer" class="project-action-link f1-font magnetic">VIEW LIVE RUNTIME <i class="fas fa-chevron-right"></i></a>
+                        </div>
+                    </div>
 
-                <div class="skills-unboxed-drawer tech-heading" id="unboxedDrawerGrid" style="font-size: 0.75rem;">
-                    <div class="skill-item-node"><i class="fab fa-python"></i>PYTHON ENGINE<span class="skill-category">AI Core</span></div>
-                    <div class="skill-item-node"><i class="fas fa-brain"></i>SUPERVISED LEARNING<span class="skill-category">Scikit-Learn / ML</span></div>
-                    <div class="skill-item-node"><i class="fas fa-calculator"></i>LINEAR ALGEBRA<span class="skill-category">Matrix / NumPy</span></div>
-                    <div class="skill-item-node"><i class="fas fa-chart-line"></i>DATA PREPROCESSING<span class="skill-category">Pandas Analytics</span></div>
-                    <div class="skill-item-node"><i class="fas fa-eye"></i>COMPUTER VISION<span class="skill-category">OpenCV Core</span></div>
-                    <div class="skill-item-node"><i class="fas fa-database"></i>RDBMS STRUCTURE<span class="skill-category">SQL / Query Optimization</span></div>
-                    <div class="skill-item-node"><i class="fab fa-js"></i>JAVASCRIPT<span class="skill-category">Web Systems</span></div>
-                    <div class="skill-item-node"><i class="fab fa-react"></i>REACT / NEXT.JS<span class="skill-category">Frontend Core</span></div>
-                    <div class="skill-item-node"><i class="fab fa-node-js"></i>NODE.JS API<span class="skill-category">Backend Logic</span></div>
-                    <div class="skill-item-node"><i class="fas fa-sitemap"></i>STRATEGIC OPERATIONS<span class="skill-category">Presidential Asset</span></div>
-                    <div class="skill-item-node"><i class="fas fa-comments-dollar"></i>NEGOTIATION<span class="skill-category">Sponsorship / Media</span></div>
-                    <div class="skill-item-node"><i class="fas fa-users-cog"></i>CROSS-FUNCTIONAL MGMT<span class="skill-category">40+ Staff </span></div>
+                    <!-- GAMBLING DETECTION -->
+                    <div class="project-giant-card tilt-3d">
+                        <div class="img-container"><img src="profile/GamblingDetection.png" alt="NLP" loading="lazy" decoding="async"></div>
+                        <div class="project-content-data">
+                            <div>
+                                <span class="type-badge f1-font">Natural Language Processing</span>
+                                <h3>Gambling Content Detection</h3>
+                                <p>Built a Naive Bayes + regex-based text classification pipeline to detect gambling-related spam ("judol") across 268 YouTube comments, achieving a 72% detection rate while handling Unicode obfuscation.</p>
+                                <div class="project-details-grid">
+                                    <div class="detail-block"><strong class="tech-heading">CONTRIBUTIONS</strong><span>Text moderation pipeline architecture</span></div>
+                                    <div class="detail-block"><strong class="tech-heading">METRICS</strong><span>72% Detection Rate across 268 comments</span></div>
+                                </div>
+                            </div>
+                            <div class="tech-tags-row tech-heading"><span>Python</span><span>Naive Bayes</span><span>Regex</span><span>NLP</span></div>
+                            <a href="https://github.com/EzraMayurga" target="_blank" rel="noopener noreferrer" class="project-action-link f1-font magnetic">VIEW REPOSITORY <i class="fas fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- EDGE DETECTION -->
+                    <div class="project-giant-card tilt-3d">
+                        <div class="img-container"><img src="profile/ComVis.png" alt="Vision" loading="lazy" decoding="async"></div>
+                        <div class="project-content-data">
+                            <div>
+                                <span class="type-badge f1-font">Computer Vision</span>
+                                <h3>Edge Detection & Image Processing</h3>
+                                <p>Implemented a computer vision pipeline using Gaussian filtering and Canny Edge Detection to extract structural image features as part of applied computer vision coursework.</p>
+                                <div class="project-details-grid">
+                                    <div class="detail-block"><strong class="tech-heading">CONTRIBUTIONS</strong><span>Spatial filtering & convolution operations</span></div>
+                                    <div class="detail-block"><strong class="tech-heading">ALGORITHM</strong><span>Gaussian Filter + Canny Edge</span></div>
+                                </div>
+                            </div>
+                            <div class="tech-tags-row tech-heading"><span>Python</span><span>OpenCV</span><span>Spatial Filtering</span></div>
+                            <a href="https://github.com/EzraMayurga" target="_blank" rel="noopener noreferrer" class="project-action-link f1-font magnetic">VIEW SPECS <i class="fas fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- FLOODSIGHT -->
+                    <div class="project-giant-card tilt-3d">
+                        <div class="img-container"><img src="profile/FloodSight.png" alt="Flood" loading="lazy" decoding="async"></div>
+                        <div class="project-content-data">
+                            <div>
+                                <span class="type-badge f1-font">Artificial Intelligence</span>
+                                <h3>FloodSight Jakarta</h3>
+                                <p>An AI early response platform monitoring flood status across Jakarta's critical sectors. Pairs live meteo feeds with smart rescue paths.</p>
+                                <div class="project-details-grid">
+                                    <div class="detail-block"><strong class="tech-heading">CONTRIBUTIONS</strong><span>Extended application with Leaflet maps</span></div>
+                                    <div class="detail-block"><strong class="tech-heading">METRICS</strong><span>Geographical metrics into web map</span></div>
+                                </div>
+                            </div>
+                            <div class="tech-tags-row tech-heading"><span>Next.js 14</span><span>TypeScript</span><span>Leaflet</span></div>
+                            <a href="https://github.com/EzraMayurga/floodsight-jakarta" target="_blank" rel="noopener noreferrer" class="project-action-link f1-font magnetic">VIEW REPOSITORY <i class="fas fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- DUMMY PROJECT 01 -->
+                    <div class="project-giant-card tilt-3d">
+                        <div class="img-container"><img src="profile/ComVis.png" alt="Dummy Project 1" loading="lazy" decoding="async"></div>
+                        <div class="project-content-data">
+                            <div>
+                                <span class="type-badge f1-font">Data Engineering / AI</span>
+                                <h3>[DUMMY PROJECT 01 TITLE]</h3>
+                                <p>Tuliskan deskripsi singkat mengenai proyek pertama kamu di sini. Jelaskan masalah yang diselesaikan dan teknologi utama yang kamu gunakan.</p>
+                                <div class="project-details-grid">
+                                    <div class="detail-block"><strong class="tech-heading">ROLE</strong><span>Lead Developer / Data Analyst</span></div>
+                                    <div class="detail-block"><strong class="tech-heading">METRICS</strong><span>Performa / Hasil Utama Proyek</span></div>
+                                </div>
+                            </div>
+                            <div class="tech-tags-row tech-heading"><span>Python</span><span>FastAPI</span><span>PostgreSQL</span></div>
+                            <a href="https://github.com/EzraMayurga" target="_blank" rel="noopener noreferrer" class="project-action-link f1-font magnetic">VIEW REPOSITORY <i class="fas fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- DUMMY PROJECT 02 -->
+                    <div class="project-giant-card tilt-3d">
+                        <div class="img-container"><img src="profile/Golf.png" alt="Dummy Project 2" loading="lazy" decoding="async"></div>
+                        <div class="project-content-data">
+                            <div>
+                                <span class="type-badge f1-font">Machine Learning</span>
+                                <h3>[DUMMY PROJECT 02 TITLE]</h3>
+                                <p>Tuliskan deskripsi singkat mengenai proyek kedua kamu di sini. Sebutkan keunggulan sistem, dataset, atau model machine learning yang diterapkan.</p>
+                                <div class="project-details-grid">
+                                    <div class="detail-block"><strong class="tech-heading">ROLE</strong><span>AI Research / Model Engineer</span></div>
+                                    <div class="detail-block"><strong class="tech-heading">ACCURACY</strong><span>95% Classification Accuracy</span></div>
+                                </div>
+                            </div>
+                            <div class="tech-tags-row tech-heading"><span>PyTorch</span><span>Scikit-Learn</span><span>Streamlit</span></div>
+                            <a href="https://github.com/EzraMayurga" target="_blank" rel="noopener noreferrer" class="project-action-link f1-font magnetic">VIEW LIVE DEMO <i class="fas fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
 
-        <!-- PROJECT -->
-        <section class="projects-section">
-            <div class="section-header"><h2 class="f1-font" style="font-size: 2.5rem;">// PROJECT RELEASES</h2></div>
-            <!-- GOLF -->
-            <div class="projects-linear-stack">
-                <div class="project-giant-card">
-                    <div class="img-container"><img src="profile/Golf.png" alt="Golf Project Image"></div>
-                    <div class="project-content-data">
-                        <div>
-                            <span class="type-badge f1-font">Software Engineering // Group Deployment</span>
-                            <h3>Golf Helper Identifier</h3>
-                            <p>A web-based golf swing analysis system powered by YOLOv8-Pose that connects players and coaches to a digital coaching ecosystem. Eliminates heavy human coaching fees and allows native, zero-installation setup.</p>
-                            <div class="project-details-grid">
-                                <div class="detail-block"><strong class="tech-heading">CONTRIBUTIONS</strong><span> Team Leader & Developed the underlying Node.js backend architecture and WebSocket integration. Hooked up Python YOLOv8 processing arrays to Gemini AI.</span></div>
-                                <div class="detail-block"><strong class="tech-heading">METRICS</strong><span>Secures low runtime delay loops over web endpoints. System processes and logs analysis reports in under 3 seconds.</span></div>
-                            </div>
-                        </div>
-                        <div class="tech-tags-row tech-heading"><span>React (Vite)</span><span>Node.js</span><span>Python</span><span>YOLOv8-Pose</span><span>Gemini API</span><span>Docker</span></div>
-                        <a href="https://golf-helper-identifier.vercel.app" target="_blank" class="project-action-link f1-font">VIEW LIVE RUNTIME <i class="fas fa-chevron-right"></i></a>
-                    </div>
-                </div>
-
-                <!-- FLOODSIGHT -->
-                <div class="project-giant-card">
-                    <div class="img-container"><img src="profile/FloodSight.png" alt="Flood Project Image"></div>
-                    <div class="project-content-data">
-                        <div>
-                            <span class="type-badge f1-font">Artificial Intelligence // Group Deployment</span>
-                            <h3>FloodSight Jakarta</h3>
-                            <p>An AI early response platform monitoring flood status across Jakarta's critical sectors. Pairs live meteo feeds and elevation vectors with smart rescue paths at $0 structural maintenance fees.</p>
-                            <div class="project-details-grid">
-                                <div class="detail-block"><strong class="tech-heading">CONTRIBUTIONS</strong><span>Extended the application framework with verified Citizen Incident Reporting logs, Haversine geospatial logic, and custom Leaflet maps.</span></div>
-                                <div class="detail-block"><strong class="tech-heading">METRICS</strong><span>Combines disparate geographical metrics into a responsive web map ecosystem engineered for municipal flood centers.</span></div>
-                            </div>
-                        </div>
-                        <div class="tech-tags-row tech-heading"><span>Next.js 14</span><span>TypeScript</span><span>Tailwind CSS</span><span>Leaflet Map</span><span>Open-Meteo API</span><span>OSRM</span></div>
-                        <a href="https://github.com/EzraMayurga/floodsight-jakarta" target="_blank" class="project-action-link f1-font">VIEW REPOSITORY LOGS <i class="fas fa-chevron-right"></i></a>
-                    </div>
-                </div>
-
-                <!-- Gambling DETECTION -->
-                <div class="project-giant-card">
-                    <div class="img-container"><img src="profile/GamblingDetection.png" alt="NLP Security Block"></div>
-                    <div class="project-content-data">
-                        <div>
-                            <span class="type-badge f1-font">Natural Language Processing // Content Security</span>
-                            <h3>Gambling Content Detection Engine</h3>
-                            <p>A specialized text classification network designed to automatically isolate, flag, and filter out high-volume gambling spam and illegal promotional materials from YouTube comments.</p>
-                            <div class="project-details-grid">
-                                <div class="detail-block"><strong class="tech-heading">CONTRIBUTIONS</strong><span>Architected the structural text moderation system inside a Python workspace. Developed the core tokenization and classifier logic.</span></div>
-                                <div class="detail-block"><strong class="tech-heading">ALGORITHMIC MATRIX</strong><span>Combines a Naive Bayes probability classifier pipeline with custom regex pattern-matching routines to trap masked spam arrays.</span></div>
-                            </div>
-                        </div>
-                        <div class="tech-tags-row tech-heading"><span>Python</span><span>Naive Bayes</span><span>Regex Matched</span><span>NLP Core</span><span>Data Moderation</span></div>
-                        <a href="https://github.com/EzraMayurga" target="_blank" class="project-action-link f1-font">VIEW ENGINE DISPATCH <i class="fas fa-chevron-right"></i></a>
-                    </div>
-                </div>
-
-                <!-- Edge Detection -->
-                <div class="project-giant-card">
-                    <div class="img-container"><img src="profile/ComVis.png" alt="Computer Vision Matrix"></div>
-                    <div class="project-content-data">
-                        <div>
-                            <span class="type-badge f1-font">Computer Vision // Spatial Processing</span>
-                            <h3>Optical Edge Detection Pipeline</h3>
-                            <p>A programmatic computer vision processing array engineered to process static image arrays, apply matrix filters, and extract clean architectural geometries and structural outlines.</p>
-                            <div class="project-details-grid">
-                                <div class="detail-block"><strong class="tech-heading">CONTRIBUTIONS</strong><span>Engineered the computational image processing workflow utilizing multi-stage space filtering. Explored pure pixel matrix convolution.</span></div>
-                                <div class="detail-block"><strong class="tech-heading">ALGORITHMIC MATRIX</strong><span>Deploys Gaussian multi-channel filtering nodes for signal noise reduction paired with native Canny Edge Detection loops.</span></div>
-                            </div>
-                        </div>
-                        <div class="tech-tags-row tech-heading"><span>Python</span><span>OpenCV Matrix</span><span>Gaussian Filter</span><span>Canny Algorithm</span><span>Spatial Compute</span></div>
-                        <a href="https://github.com/EzraMayurga" target="_blank" class="project-action-link f1-font">VIEW MATRIX SPECS <i class="fas fa-chevron-right"></i></a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Timeline Segment -->
+        <!-- WORK EXPERIENCE & ORGANIZATION SECTION -->
         <section class="timeline-section">
-            <div class="section-header"><h2 class="f1-font" style="font-size: 2.5rem;">// DEPLOYMENTS EXPERIENCES</h2></div>
+            <div class="section-header reveal-zoom"><h2 class="f1-font">// DEPLOYMENTS & LEADERSHIP</h2></div>
 
-            <div class="timeline-matrix">
-                <!-- NEW TERMINAL ARRAY: 2026 - Present -->
-                <div class="timeline-stripe">
-                    <div class="stripe-date f1-font">MAR 2026 - PRESENT</div>
-                    <div class="stripe-core">
-                        <h4 class="f1-font">BackEnd Developer — BVoice Radio Jakarta</h4>
-                        <p>Responsible for designing, building, and maintaining the server-side logic, data management workflows, and API integrations that kept the university's online radio and media platform running smoothly:</p>
-                        <ul>
-                            <li>API Design: Developed secure RESTful APIs to power web platforms and internal station tools</li>
-                            <li>Performance: Optimized audio streaming backend services to ensure low-latency playback</li>
-                            <li>Database Management: Structured databases for efficient management for data user</li>
-                            <li>Collaboration: Partnered with frontend teams to rapidly deploy new platform features</li>
-                        </ul>
+            <div class="exp-org-two-column">
+                <div class="column-box reveal-zoom">
+                    <h3 class="f1-font"><i class="fas fa-briefcase"></i> WORK EXPERIENCE</h3>
+                    <div class="linkedin-timeline-container">
+                        
+                        <div class="li-timeline-item">
+                            <div class="li-logo"><i class="fas fa-chart-line"></i></div>
+                            <div class="li-content">
+                                <div class="li-header">
+                                    <div class="li-title">
+                                        <h4>Data Science and Analytics Intern</h4>
+                                        <div class="li-company">Zidio Development — India (Remote)</div>
+                                    </div>
+                                    <div class="li-date">July 2026 - Present</div>
+                                </div>
+                                <div class="li-desc">
+                                    <ul>
+                                        <li>Analyzed 10M+ transaction records using Python (Pandas) to build demand intelligence models[cite: 1].</li>
+                                        <li>Built automated Python ETL pipelines, reducing dataset processing time by 60% while maintaining 100% data integrity[cite: 1].</li>
+                                        <li>Engineered inventory risk framework, identifying 30% overstock (>90 days) and preventing stockouts[cite: 1].</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="li-timeline-item">
+                            <div class="li-logo"><i class="fas fa-user-friends"></i></div>
+                            <div class="li-content">
+                                <div class="li-header">
+                                    <div class="li-title">
+                                        <h4>Event Crew</h4>
+                                        <div class="li-company">BRI Consumer Expo - PT Dyandra Promosindo</div>
+                                    </div>
+                                    <div class="li-date">Aug 2025</div>
+                                </div>
+                                <div class="li-desc">
+                                    <p>Provided on-ground assistance for thousands of visitors and handled 11 automotive tenants (Toyota, BMW, BYD) during the 3-day expo[cite: 1].</p>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="stripe-layer-badge tech-heading">STEERING GRID</div>
                 </div>
 
-                <!-- NEW TERMINAL ARRAY: Announcer 2025 - Present -->
-                <div class="timeline-stripe">
-                    <div class="stripe-date f1-font">MAR 2025 - PRESENT</div>
-                    <div class="stripe-core">
-                        <h4 class="f1-font">Producer & Announcer — BVoice Radio Jakarta</h4>
-                        <p>Deployed as primary on-air brand asset and vocal engineering transmission point under the operational standard "Your Voice and Your Sound":</p>
-                        <ul>
-                            <li>Executing high-retention live radio streaming arrays, managing creative youth content segments, real-time community entertainment logs, and news deliveries.</li>
-                            <li>Synthesizing real-time interactive audience feeds to maximize station engagement metrics.</li>
-                        </ul>
-                    </div>
-                    <div class="stripe-layer-badge tech-heading">MEDIA INVENTORY</div>
-                </div>
+                <div class="column-box reveal-zoom">
+                    <h3 class="f1-font"><i class="fas fa-sitemap"></i> ORGANIZATIONS</h3>
+                    <div class="linkedin-timeline-container">
+                        
+                        <div class="li-timeline-item">
+                            <div class="li-logo"><i class="fas fa-server"></i></div>
+                            <div class="li-content">
+                                <div class="li-header">
+                                    <div class="li-title">
+                                        <h4>Backend Developer</h4>
+                                        <div class="li-company">BVoice Radio BINUS University</div>
+                                    </div>
+                                    <div class="li-date">Mar 2026 - Present</div>
+                                </div>
+                                <div class="li-desc">
+                                    <ul>
+                                        <li>Built automated email reminder system for seminar program (356 registered participants)[cite: 1].</li>
+                                        <li>Extended email reminder system to Runora charity run event (70+ participants)[cite: 1].</li>
+                                        <li>Collaborated with frontend team on feature deployment and database structuring[cite: 1].</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
 
-                <!-- UPDATED DEPLOYMENT: President 2025 - 2026 -->
-                <div class="timeline-stripe">
-                    <div class="stripe-date f1-font">MAR 2025 - MAR 2026</div>
-                    <div class="stripe-core">
-                        <h4 class="f1-font">President — BVoice Radio Jakarta</h4>
-                        <p>Commanded the overall organizational vision, multi-tier budget pools, and large-scale execution frameworks for a student-run online media network associated with BINUS University:</p>
-                        <ul>
-                            <li>Managed full lifecycle pipeline parameters for off-air campaigns from initial conceptual maps, financial budgeting, and fundraising arrays down to final deployment.</li>
-                            <li>Negotiated commercial investment packages with external brand partners, corporate sponsors, and media syndicates to discover alternative revenue pipelines.</li>
-                            <li>Oversaw physical production nodes, tracking venue architecture logic, technical sound/lighting arrays, zoning clearances, and multi-division team alignments.</li>
-                            <li>Executed runtime mitigation vectors for data/technical bottlenecks, ensuring all milestones tracking perfectly along the targeted roadmap schedule.</li>
-                            <li>Engineered structural leadership succession maps to secure continuous, sustainable organizational handovers for subsequent terms.</li>
-                        </ul>
+                        <div class="li-timeline-item">
+                            <div class="li-logo"><i class="fas fa-crown"></i></div>
+                            <div class="li-content">
+                                <div class="li-header">
+                                    <div class="li-title">
+                                        <h4>President</h4>
+                                        <div class="li-company">BVoice Radio BINUS University</div>
+                                    </div>
+                                    <div class="li-date">Mar 2025 - Mar 2026</div>
+                                </div>
+                                <div class="li-desc">
+                                    <ul>
+                                        <li>Directed strategic vision for BVoice Radio, overseeing flagship events (700+ Expo participants, 356 Seminar participants)[cite: 1].</li>
+                                        <li>Led 100+ member student organization, managing sponsor relationships and new event revenue streams[cite: 1].</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="li-timeline-item">
+                            <div class="li-logo"><i class="fas fa-sliders-h"></i></div>
+                            <div class="li-content">
+                                <div class="li-header">
+                                    <div class="li-title">
+                                        <h4>Producer & Announcer</h4>
+                                        <div class="li-company">BVoice Radio BINUS University</div>
+                                    </div>
+                                    <div class="li-date">Mar 2025 - Present</div>
+                                </div>
+                                <div class="li-desc">
+                                    <ul>
+                                        <li>Produced weekly on-air broadcasts and curated Gen-Z content strategy (+8 listeners per session)[cite: 1].</li>
+                                        <li>Hosted live radio broadcasts and managed real-time audience interaction[cite: 1].</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="stripe-layer-badge tech-heading">COMMAND SECTOR</div>
                 </div>
             </div>
         </section>
 
-        <!-- Achievements Grid Block -->
-        <section class="timeline-section" style="background: #090d0b;">
-            <div class="section-header"><h2 class="f1-font" style="font-size: 2.5rem;">// ACHIEVEMENTS </h2></div>
+        <!-- CERTIFICATIONS & LINKEDIN PROOF SECTION -->
+        <section class="timeline-section">
+            <div class="section-header reveal-zoom"><h2 class="f1-font">// CERTIFICATIONS & ACHIEVEMENTS</h2></div>
 
-            <div class="timeline-matrix">
-                <!-- NEW ACHIEVEMENT: Microsoft Elevate AI -->
-                <div class="timeline-stripe">
-                    <div class="stripe-date f1-font">MAR 2026</div>
-                    <div class="stripe-core">
-                        <h4 class="f1-font">Microsoft Elevate AI Certification — Azure AI Fundamentals</h4>
-                        <p>Held by Microsoft x BINUS University (GreatNusa Platform):</p>
-                        <ul>
-                            <li>Completed 15 hours of specialized technical validation tracking baseline AI framework implementations.</li>
-                            <li>Explored cloud infrastructure deployment paradigms and fundamental Azure engine capabilities.</li>
-                        </ul>
-                    </div>
-                    <div class="stripe-layer-badge tech-heading">CREDENTIAL CLEARANCE</div>
+            <div class="cert-grid-layout reveal-zoom">
+                <div class="cert-card-node">
+                    <div class="cert-issuer">ICORIS 2026</div>
+                    <h4>IEEE Research Paper Author & Presenter</h4>
+                    <div class="cert-date">2026</div>
+                    <div class="cert-id">Paper: "Classical ML vs. Deep Learning for Stock Price Prediction"[cite: 1]</div>
                 </div>
 
-                <!-- NEW ACHIEVEMENT: Generative AI LinkedIn -->
-                <div class="timeline-stripe">
-                    <div class="stripe-date f1-font">MAR 2026</div>
-                    <div class="stripe-core">
-                        <h4 class="f1-font">Generative AI Core Systems Engineering Verification</h4>
-                        <p>Held by LinkedIn Learning Hub Architecture Platform:</p>
-                        <ul>
-                            <li>Validated proficiency across modern generative models, structural weights, prompting blocks, and real-world enterprise AI utility loops.</li>
-                        </ul>
-                    </div>
-                    <div class="stripe-layer-badge tech-heading">COMPUTATIONAL CORE</div>
+                <div class="cert-card-node">
+                    <div class="cert-issuer">BINUS x MICROSOFT</div>
+                    <h4>Microsoft Azure AI Fundamentals — Course Completion</h4>
+                    <div class="cert-date">March 09, 2026</div>
+                    <div class="cert-id">Cert No: 111541121816490/GreatNusa/III/2026[cite: 4]</div>
                 </div>
 
-                <!-- NEW ACHIEVEMENT: NSO Gold Medal Mathematics -->
-                <div class="timeline-stripe">
-                    <div class="stripe-date f1-font">2022</div>
-                    <div class="stripe-core">
-                        <h4 class="f1-font">National Gold Medalist // National Science Olympiad 2.0</h4>
-                        <p>National level mathematics competitive event:</p>
-                        <ul>
-                            <li>Secured the top-tier National Gold Medal placement for advanced numeric analysis, complex logical induction matrix capabilities, and discrete computational mathematics.</li>
-                        </ul>
-                    </div>
-                    <div class="stripe-layer-badge tech-heading">PODIUM</div>
+                <div class="cert-card-node">
+                    <div class="cert-issuer">MICROSOFT x GREATNUSA</div>
+                    <h4>M365 Copilot Productivity Training</h4>
+                    <div class="cert-date">March 06, 2026</div>
+                    <div class="cert-id">Cert No: 191440413816490/GreatNusa/III/2026[cite: 3]</div>
                 </div>
 
-                <!-- NEW ACHIEVEMENT: UI Physics Pre-U -->
-                <div class="timeline-stripe">
-                    <div class="stripe-date f1-font">2024</div>
-                    <div class="stripe-core">
-                        <h4 class="f1-font">FISIKA DASAR 2 // Universitas Indonesia Pre-U</h4>
-                        <p>Academic acceleration validation issued directly by UI Faculty Core:</p>
-                        <ul>
-                            <li>Successfully completed the Pre-University academic tier targeting foundational physical system mechanics (Fisika Dasar 2) with A- scored</li>
-                        </ul>
-                    </div>
-                    <div class="stripe-layer-badge tech-heading">Thriving</div>
+                <div class="cert-card-node">
+                    <div class="cert-issuer">ZIDIO DEVELOPMENT</div>
+                    <h4>Data Science & Analytics Internship & Training</h4>
+                    <div class="cert-date">September 04, 2026</div>
+                    <div class="cert-id">Verify ID: ZID-V-5385C2409B0D / ZID-V-3BAB7628DFED[cite: 10, 12]</div>
                 </div>
 
-                <!-- NEW ACHIEVEMENT: National Physics / English Olympiad Rows -->
-                <div class="timeline-stripe">
-                    <div class="stripe-date f1-font">2023</div>
-                    <div class="stripe-core">
-                        <h4 class="f1-font">Bronze Medalist // National Olympiad Tiers</h4>
-                        <p>held by UNIVERSITY.ID National Analytics Grid:</p>
-                        <ul>
-                            <li><strong>National Physics Arena:</strong> Clinched Bronze Medal positioning while ranking #13 and #32 across provincial-level high-compute data pipelines.</li>
-                            <li><strong>National English Communication Arena:</strong> Clinched Bronze Medal positioning while scoring rank #21 at the provincial level.</li>
-                        </ul>
-                    </div>
-                    <div class="stripe-layer-badge tech-heading">HighSchool Thrive</div>
+                <div class="cert-card-node">
+                    <div class="cert-issuer">BEELINGUA — BINUS UNIVERSITY</div>
+                    <h4>Advanced English C2.1 & Business Comm C2.2</h4>
+                    <div class="cert-date">July 2026</div>
+                    <div class="cert-id">Verify ID: 2026-C-qkkejFoaONxMp / 2026-C-KmapzLER6EKIH[cite: 8, 9]</div>
                 </div>
 
-                <!-- NEW ACHIEVEMENT: Athletics Rows -->
-                <div class="timeline-stripe">
-                    <div class="stripe-date f1-font">2018 - 2023</div>
-                    <div class="stripe-core">
-                        <h4 class="f1-font">Athletic Records // Martial Arts & Aquatics</h4>
-                        <p>Physical conditioning benchmarks mirroring professional motorsport stamina setups:</p>
-                        <ul>
-                            <li><strong>P3 Bronze Medalist (2023):</strong> 100-Meter Freestyle Aquatic Sprint — Jakarta Selatan Municipal Administration.</li>
-                            <li><strong>P2 Silver Medalist (2018):</strong> Karate Kata Putra division — Indonesian Youth and Sport Event Grid.</li>
-                            <li><strong>National Aquatic Championship Clearance (2021):</strong> Awarded Honor Credentials at the Indonesia Open Swimming Championship & KEJURPROV DKI Aquatics Arena.</li>
-                        </ul>
-                    </div>
-                    <div class="stripe-layer-badge tech-heading">EXERCISE PARAMETERS</div>
+                <div class="cert-card-node">
+                    <div class="cert-issuer">BEELINGUA — BINUS UNIVERSITY</div>
+                    <h4>Creative Writing C1.1 & Professional Office C1.2</h4>
+                    <div class="cert-date">July 2026</div>
+                    <div class="cert-id">Verify ID: 2026-C-9XwrniKgbsILE / 2026-C-NEAANGwiaUVtE[cite: 6, 7]</div>
                 </div>
+            </div>
+
+            <div class="linkedin-proof-banner reveal-zoom">
+                <h3 class="f1-font">VERIFIED CREDENTIALS & CERTIFICATION PROOF</h3>
+                <p>Seluruh bukti fisik sertifikat dan kredensial resmi dapat diverifikasi secara langsung melalui profil LinkedIn saya.</p>
+                <a href="https://www.linkedin.com/in/ezra-mayurga-44746021a/" target="_blank" rel="noopener noreferrer" class="linkedin-btn-action f1-font">
+                    <i class="fab fa-linkedin" style="font-size: 1.3rem;"></i> CHECK LINKEDIN PROFILE
+                </a>
             </div>
         </section>
 
     </div>
 
-    <!-- Script Block for Core Interactive Controls (Don't Lose This!) -->
+    <!-- EXTERNAL LIBRARIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"></script>
+
     <script>
-        // Interactive Skill Box Open Array Logic
-        const mysteryBox = document.getElementById('mysteryBoxTrigger');
-        const unboxedDrawer = document.getElementById('unboxedDrawerGrid');
+        /**
+         * GLOBAL PORTFOLIO CONFIGURATION (Easy Maintenance)
+         * Kamu bisa mengubah setelan dasar tanpa perlu merusak logika program.
+         */
+        const CONFIG = {
+            vanta: {
+                birdSize: window.innerWidth < 768 ? 0.25 : 0.40,
+                quantity: window.innerWidth < 768 ? 3.00 : 5.00,
+                color1: 0xceff00,
+                color2: 0x00ff88,
+                backgroundColor: 0x030404
+            },
+            preloaderDelayMs: 3800
+        };
 
-        if(mysteryBox && unboxedDrawer) {
-            mysteryBox.addEventListener('click', () => {
-                if (unboxedDrawer.style.display === 'grid') {
-                    unboxedDrawer.style.display = 'none';
-                    mysteryBox.querySelector('p').textContent = 'OPEN DRAWER';
-                    mysteryBox.querySelector('i').className = 'fas fa-boxes';
-                } else {
-                    unboxedDrawer.style.display = 'grid';
-                    mysteryBox.querySelector('p').textContent = 'LOCK SYSTEM';
-                    mysteryBox.querySelector('i').className = 'fas fa-box-open';
-                    unboxedDrawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-            });
+        // Initialize Vanta Background Safely
+        let vantaEffect = null;
+        try {
+            if (window.VANTA && window.THREE) {
+                vantaEffect = VANTA.BIRDS({
+                    el: "#vanta-birds-bg",
+                    mouseControls: true,
+                    touchControls: true,
+                    gyroControls: false,
+                    minHeight: 200.00,
+                    minWidth: 200.00,
+                    scale: 1.00,
+                    scaleMobile: 1.00,
+                    backgroundColor: CONFIG.vanta.backgroundColor,
+                    color1: CONFIG.vanta.color1,
+                    color2: CONFIG.vanta.color2,
+                    colorMode: "variance",
+                    birdSize: CONFIG.vanta.birdSize,
+                    wingSpan: 26.00,
+                    speedLimit: 4.80,
+                    separation: 30.00,
+                    alignment: 25.00,
+                    cohesion: 25.00,
+                    quantity: CONFIG.vanta.quantity
+                });
+            }
+        } catch (err) {
+            console.warn("Vanta.js failed to load smoothly:", err);
         }
 
-        // Draggable Photo Corridor Interaction Logic (now coexists with auto-scroll)
-        const slider = document.getElementById('dragCorridor');
-        const track = document.getElementById('dragTrack');
-        
-        if(slider && track) {
-            let isDown = false;
-            let startX;
-            let scrollLeft = 0;
-
-            function pauseAutoScroll() {
-                track.classList.add('paused');
+        // Handle Intro Sequence
+        window.addEventListener('load', () => {
+            const intro = document.getElementById('cinematic-intro');
+            if (intro) {
+                setTimeout(() => {
+                    intro.style.transition = 'opacity 0.8s ease';
+                    intro.style.opacity = '0';
+                    setTimeout(() => {
+                        intro.remove();
+                        document.body.classList.remove('intro-active');
+                        window.dispatchEvent(new Event('scroll'));
+                    }, 800);
+                }, CONFIG.preloaderDelayMs);
             }
-
-            function resumeAutoScrollSoon() {
-                // Give a small grace period after releasing drag before resuming auto-scroll
-                clearTimeout(track._resumeTimer);
-                track._resumeTimer = setTimeout(() => {
-                    // Drop the inline transform so the CSS animation can take back over smoothly
-                    track.style.transform = '';
-                    track.classList.remove('paused');
-                }, 600);
-            }
-
-            slider.addEventListener('mousedown', (e) => {
-                isDown = true;
-                pauseAutoScroll();
-                clearTimeout(track._resumeTimer);
-                startX = e.pageX - track.offsetLeft;
-                scrollLeft = getTransformX(track);
-            });
-
-            slider.addEventListener('mouseleave', () => {
-                if (isDown) resumeAutoScrollSoon();
-                isDown = false;
-            });
-            slider.addEventListener('mouseup', () => {
-                if (isDown) resumeAutoScrollSoon();
-                isDown = false;
-            });
-
-            slider.addEventListener('mousemove', (e) => {
-                if(!isDown) return;
-                e.preventDefault();
-                const x = e.pageX - slider.offsetLeft;
-                const walk = (x - startX) * 1.5; 
-                let targetX = scrollLeft + walk;
-                
-                const maxDelta = -(track.scrollWidth - slider.clientWidth);
-                if (targetX > 0) targetX = 0;
-                if (targetX < maxDelta) targetX = maxDelta;
-                
-                track.style.transform = `translateX(${targetX}px)`;
-            });
-
-            function getTransformX(element) {
-                const style = window.getComputedStyle(element);
-                const matrix = new WebKitCSSMatrix(style.transform);
-                return matrix.m41;
-            }
-        }
-
-        // Active Responsive Vector Mouse Tracking Engine — now expressive
-        const faceLayer = document.getElementById('dynamic-face');
-        const pupils = document.querySelectorAll('.f1-movable-pupil');
-        const avatarBox = document.getElementById('stickyRobotHead');
-        const avatarSvg = avatarBox ? avatarBox.querySelector('svg') : null;
-
-        // Lock in each pupil's original base position once, so it never gets confused later
-        pupils.forEach(pupil => {
-            pupil.dataset.baseCx = pupil.getAttribute('cx');
-            pupil.dataset.baseCy = pupil.getAttribute('cy');
         });
 
-        if(avatarBox && faceLayer) {
-            window.addEventListener('mousemove', (e) => {
-                const rect = avatarBox.getBoundingClientRect();
-                const avatarX = rect.left + rect.width / 2;
-                const avatarY = rect.top + rect.height / 2;
-                
-                const deltaX = e.clientX - avatarX;
-                const deltaY = e.clientY - avatarY;
-                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY) || 1;
-                
-                const maxMoveFace = 4; 
-                const moveFaceX = (deltaX / distance) * Math.min(maxMoveFace, distance / 35);
-                const moveFaceY = (deltaY / distance) * Math.min(maxMoveFace, distance / 35);
-                
-                faceLayer.style.transform = `translate(${moveFaceX}px, ${moveFaceY}px)`;
-                
-                pupils.forEach(pupil => {
-                    const maxMovePupil = 1.8;
-                    const movePupilX = (deltaX / distance) * Math.min(maxMovePupil, distance / 25);
-                    const movePupilY = (deltaY / distance) * Math.min(maxMovePupil, distance / 25);
-                    const baseCx = parseFloat(pupil.dataset.baseCx);
-                    const baseCy = parseFloat(pupil.dataset.baseCy);
-                    pupil.setAttribute('cx', baseCx + movePupilX);
-                    pupil.setAttribute('cy', baseCy + movePupilY);
-                });
+        // Mouse Coordinates Cache
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let lastMx = mouseX, lastMy = mouseY;
 
-                // Expressive whole-head tilt toward the cursor
-                if (avatarSvg) {
-                    const maxTilt = 10;
-                    const tiltY = (deltaX / distance) * Math.min(maxTilt, distance / 30);
-                    const tiltX = -(deltaY / distance) * Math.min(maxTilt, distance / 30);
-                    avatarSvg.style.transform = `perspective(400px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-                }
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        }, { passive: true });
+
+        // Magnetic Hover Effect
+        document.querySelectorAll('.magnetic').forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const hx = rect.left + rect.width / 2;
+                const hy = rect.top + rect.height / 2;
+                el.style.transform = `translate(${(e.clientX - hx) * 0.2}px, ${(e.clientY - hy) * 0.2}px)`;
+            }, { passive: true });
+
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = `translate(0px, 0px)`;
             });
+        });
 
-            // Expressive: periodic blink
-            function blinkAvatar() {
-                faceLayer.style.transition = 'transform 0.08s ease';
-                const prevTransform = faceLayer.style.transform || '';
-                faceLayer.style.transform = prevTransform + ' scaleY(0.1)';
-                setTimeout(() => {
-                    faceLayer.style.transform = prevTransform;
-                }, 90);
-                setTimeout(blinkAvatar, 2800 + Math.random() * 3200);
+        // 3D Card Tilt Engine
+        document.querySelectorAll('.tilt-3d').forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -5;
+                const rotateY = ((x - centerX) / centerX) * 5;
+                
+                el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+                el.style.transition = 'transform 0.1s ease-out';
+            }, { passive: true });
+            
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                el.style.transition = 'transform 0.5s var(--ease-cinematic)';
+            });
+        });
+
+        // Horizontal Project Track Calculation
+        const projSection = document.getElementById('projectsSection');
+        const projTrack = document.getElementById('projectsTrack');
+        let projTrackWidth = 0, maxTranslate = 0, currentTranslate = 0, targetTranslate = 0;
+
+        function calcLayout() {
+            if (window.innerWidth > 992 && projSection && projTrack) {
+                projTrackWidth = projTrack.scrollWidth;
+                maxTranslate = projTrackWidth - window.innerWidth + (window.innerWidth * 0.16); 
+                projSection.style.height = `${window.innerHeight + maxTranslate}px`;
+            } else if (projSection) {
+                projSection.style.height = 'auto';
             }
-            setTimeout(blinkAvatar, 1500);
+        }
 
-            // Expressive: happy bounce reaction when clicked
-            avatarBox.addEventListener('click', () => {
-                if (!avatarSvg) return;
-                avatarSvg.style.transition = 'transform 0.25s ease';
-                avatarSvg.style.transform = 'scale(1.18) rotate(-6deg)';
-                setTimeout(() => {
-                    avatarSvg.style.transition = 'transform 0.15s var(--ease-f1)';
-                    avatarSvg.style.transform = 'scale(1) rotate(0deg)';
-                }, 250);
+        window.addEventListener('resize', calcLayout, { passive: true });
+        window.addEventListener('load', () => setTimeout(calcLayout, 500));
+
+        // Unified RAF Engine Loop (Zero Lag)
+        let currentScrollY = window.scrollY;
+        let targetScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            targetScrollY = window.scrollY;
+        }, { passive: true });
+
+        // Avatar Eye Motion Elements
+        const pupils = document.querySelectorAll('.f1-movable-pupil');
+        const avatarBox = document.getElementById('stickyRobotHead');
+        const faceLayer = document.getElementById('dynamic-face');
+        const avatarSvg = avatarBox ? avatarBox.querySelector('svg') : null;
+
+        pupils.forEach(p => { 
+            p.dataset.baseCx = p.getAttribute('cx'); 
+            p.dataset.baseCy = p.getAttribute('cy'); 
+        });
+
+        let currPx = 0, currPy = 0, blinkScale = 1, stretchX = 1, stretchY = 1, tgtSx = 1, tgtSy = 1;
+
+        function updateAvatarEyes() {
+            if (!avatarBox || !faceLayer) return;
+            const rect = avatarBox.getBoundingClientRect();
+            const ax = rect.left + rect.width / 2;
+            const ay = rect.top + rect.height / 2;
+            const dist = Math.sqrt((mouseX - ax) ** 2 + (mouseY - ay) ** 2) || 1;
+            
+            const maxP = 4.5;
+            currPx += (((mouseX - ax) / dist * Math.min(maxP, dist / 20)) - currPx) * 0.15;
+            currPy += (((mouseY - ay) / dist * Math.min(maxP, dist / 20)) - currPy) * 0.15;
+            
+            pupils.forEach(p => { 
+                p.setAttribute('cx', parseFloat(p.dataset.baseCx) + currPx); 
+                p.setAttribute('cy', parseFloat(p.dataset.baseCy) + currPy); 
             });
+
+            faceLayer.style.transform = `scaleY(${blinkScale})`;
+
+            const speed = Math.sqrt((mouseX - lastMx) ** 2 + (mouseY - lastMy) ** 2);
+            if (speed > 5) {
+                tgtSx = 1 + Math.min(0.15, Math.abs(mouseX - lastMx) * 0.005) - Math.min(0.15, Math.abs(mouseY - lastMy) * 0.002);
+                tgtSy = 1 + Math.min(0.15, Math.abs(mouseY - lastMy) * 0.005) - Math.min(0.15, Math.abs(mouseX - lastMx) * 0.002);
+            }
+            lastMx = mouseX; 
+            lastMy = mouseY;
+
+            stretchX += (tgtSx - stretchX) * 0.1; 
+            stretchY += (tgtSy - stretchY) * 0.1;
+            tgtSx += (1 - tgtSx) * 0.08; 
+            tgtSy += (1 - tgtSy) * 0.08;
+
+            if (avatarSvg) avatarSvg.style.transform = `scale(${stretchX}, ${stretchY})`;
+        }
+
+        setInterval(() => { 
+            blinkScale = 0.1; 
+            setTimeout(() => blinkScale = 1, 90); 
+        }, 3000);
+
+        function mainEngineLoop() {
+            currentScrollY += (targetScrollY - currentScrollY) * 0.15;
+            
+            const corridor = document.getElementById('dragCorridor');
+            const heroDetails = document.querySelector('.hero-details');
+            if (corridor) {
+                const scale = 1 + (currentScrollY * 0.0005);
+                corridor.style.transform = `translateY(${currentScrollY * 0.3}px) scale(${scale})`;
+            }
+            if (heroDetails) {
+                heroDetails.style.transform = `translateY(${currentScrollY * -0.15}px)`;
+            }
+
+            // Horizontal Scroll logic
+            if (window.innerWidth > 992 && projSection && projTrack) {
+                const projSectionTop = projSection.offsetTop;
+                const relativeScroll = currentScrollY - projSectionTop;
+                
+                if (relativeScroll < 0) {
+                    targetTranslate = 0;
+                } else if (relativeScroll > maxTranslate) {
+                    targetTranslate = maxTranslate;
+                } else {
+                    targetTranslate = relativeScroll;
+                }
+
+                currentTranslate += (targetTranslate - currentTranslate) * 0.1;
+                projTrack.style.transform = `translate3d(${-currentTranslate}px, 0, 0)`;
+            }
+
+            updateAvatarEyes();
+            requestAnimationFrame(mainEngineLoop);
+        }
+
+        requestAnimationFrame(mainEngineLoop);
+
+        // Intersection Observer for Smooth Fade-In Animations
+        if ('IntersectionObserver' in window) {
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.reveal-zoom').forEach(el => obs.observe(el));
         }
     </script>
 </body>
