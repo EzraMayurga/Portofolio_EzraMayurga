@@ -37,11 +37,6 @@
             position: relative;
         }
 
-        body.intro-active {
-            overflow: hidden !important;
-            height: 100vh;
-        }
-
         /* === GLOBAL VANTA BIRDS BACKGROUND === */
         #vanta-birds-bg {
             position: fixed;
@@ -59,54 +54,24 @@
             z-index: 1;
         }
 
-        /* === 1. Preloader === */
-        #cinematic-intro {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000;
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            will-change: opacity;
-        }
-        
-        .intro-text-wrapper {
-            overflow: hidden;
-            padding: 10px;
-            text-align: center;
-            width: 100%;
-        }
-        
-        .intro-headline {
-            font-family: 'Racing Sans One', sans-serif;
-            font-size: clamp(2rem, 8vw, 6rem);
-            color: #fff;
-            letter-spacing: clamp(2px, 1vw, 5px);
-            opacity: 0;
-            transform: scale(0.9) translateY(40px);
-            animation: introReveal 3.2s var(--ease-in-out) forwards;
-            white-space: nowrap;
-        }
-        
-        .intro-sub {
-            font-family: 'Syncopate', sans-serif;
-            font-size: clamp(0.6rem, 2vw, 1.2rem);
-            color: var(--amr-lime);
-            letter-spacing: clamp(4px, 2vw, 12px);
-            margin-top: 15px;
-            opacity: 0;
-            transform: scale(0.9) translateY(20px);
-            animation: introReveal 3.2s var(--ease-in-out) 0.3s forwards;
+        /* === 1. Glyph Portal trailer (adapted from GlyphPortal.tsx — MIT, Christian Katzmann) ===
+           Auto-plays once per page load: zooms the camera into the "H" of MY APPROACH,
+           then fades away into the site. Refresh the page to watch it again. */
+        body.intro-active {
+            overflow: hidden !important;
+            height: 100vh;
         }
 
-        @keyframes introReveal {
-            0% { opacity: 0; transform: scale(0.9) translateY(40px); filter: blur(10px); }
-            30% { opacity: 1; filter: blur(0px); transform: scale(1.05) translateY(0); }
-            80% { opacity: 1; transform: scale(1.1) translateY(0); filter: blur(0px); }
-            100% { opacity: 0; transform: scale(1.3) translateY(-20px); filter: blur(15px); }
-        }
+        #gp-approach{position:fixed;inset:0;z-index:99999;background:var(--carbon-black);overflow:hidden;isolation:isolate;}
+        #gp-approach [data-gp-field]{position:absolute;inset:0;background:var(--amr-green);opacity:0;pointer-events:none;}
+        #gp-approach[data-gp-ready] [data-gp-field]{opacity:1;}
+        #gp-approach [data-gp-default-field]{position:absolute;inset:0;transform:scale(var(--gp-field-scale,1));background:radial-gradient(circle at 18% 8%,rgba(206,255,0,.16),transparent 34%),radial-gradient(circle at 82% 20%,rgba(251,251,250,.08),transparent 28%),radial-gradient(circle at 48% 78%,rgba(0,0,0,.45),transparent 44%),linear-gradient(135deg,#002214 0%,#0c3b24 48%,#030404 100%);}
+        #gp-approach [data-gp-art]{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;}
+        #gp-approach [data-gp-glyph]{font-family:'Arial Black',Arial,sans-serif;}
+        #gp-approach [data-gp-fallback]{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:0 24px;font-size:min(9vw,6.5rem);line-height:1;color:#fff;font-family:'Arial Black',Arial,sans-serif;font-weight:900;letter-spacing:1px;opacity:0;animation:gpFallbackIn .9s cubic-bezier(0.19,1,0.22,1) .15s forwards;text-shadow:0 10px 40px rgba(0,0,0,.6);}
+        #gp-approach[data-gp-ready] [data-gp-fallback]{visibility:hidden;}
+        @keyframes gpFallbackIn{from{opacity:0;transform:scale(.94) translateY(14px);filter:blur(6px);}to{opacity:1;transform:none;filter:blur(0);}}
+        @media(prefers-reduced-motion:reduce){#gp-approach{transition:opacity .3s ease;} #gp-approach [data-gp-fallback]{animation:none;opacity:1;}}
 
         .f1-font { font-family: 'Racing Sans One', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-style: italic; }
         .tech-heading { font-family: 'Syncopate', sans-serif; text-transform: uppercase; letter-spacing: 4px; }
@@ -454,12 +419,30 @@
     <!-- GLOBAL VANTA BIRDS BACKGROUND -->
     <div id="vanta-birds-bg"></div>
 
-    <!-- Preloader -->
-    <div id="cinematic-intro">
-        <div class="intro-text-wrapper"><h1 class="intro-headline">EZRA MAYURGA</h1></div>
-        <div class="intro-text-wrapper"><p class="intro-sub">COMPUTER SCIENCE</p></div>
-        <div class="intro-text-wrapper"><p class="intro-sub">INTELLIGENCE SYSTEMS</p></div>
-    </div>
+    <!-- Glyph Portal trailer — auto zooms into the "H" of MY APPROACH, then reveals the site.
+         Refresh the page to watch it again. -->
+    <!-- Glyph Portal © 2026 Christian Katzmann. MIT. Keep this notice with copies. -->
+    <section id="gp-approach" aria-label="MY APPROACH" aria-hidden="true">
+        <div data-gp-field aria-hidden="true">
+            <div data-gp-default-field></div>
+        </div>
+        <svg data-gp-art aria-hidden="true" focusable="false">
+            <defs>
+                <clipPath id="gp-approach-clip" clipPathUnits="userSpaceOnUse">
+                    <text data-gp-glyph x="0" y="0" style="font-weight:900;font-size:100px;font-kerning:none;font-variant-ligatures:none;letter-spacing:0;">MY APPROACH</text>
+                </clipPath>
+            </defs>
+        </svg>
+        <span data-gp-fallback aria-hidden="true">MY APPROACH</span>
+        <noscript>
+            <style>
+                body.intro-active{overflow:visible!important;height:auto!important;}
+                #gp-approach{position:relative!important;height:auto!important;padding:80px 20px;}
+                #gp-approach [data-gp-field],#gp-approach [data-gp-art]{display:none!important;}
+                #gp-approach [data-gp-fallback]{visibility:visible!important;position:relative!important;}
+            </style>
+        </noscript>
+    </section>
 
     <div id="master-canvas-node">
 
@@ -496,9 +479,9 @@
             </div>
 
             <div class="hero-details">
-                <span class="f1-font reveal-zoom" style="font-size: 1.5rem; color: var(--amr-lime); display: block; margin-bottom: 20px;">// DATA SCIENCE & AI</span>
+                <span class="f1-font reveal-zoom" style="font-size: 1.5rem; color: var(--amr-lime); display: block; margin-bottom: 20px;">// DATA & AI</span>
                 <h1 class="f1-font reveal-zoom" style="transition-delay: 0.1s;">EZRA MAYURGA</h1>
-                <h2 class="tech-heading reveal-zoom" style="transition-delay: 0.2s;">Computer Science Student / BINUS University</h2>
+                <h2 class="tech-heading reveal-zoom" style="transition-delay: 0.2s;">Computer Science specializing in AI | @BINUS University</h2>
                 <p class="reveal-zoom" style="transition-delay: 0.3s;">
                     Specializing in Intelligence Systems, currently gaining hands-on data science experience as a Data Science and Analytics Intern. Skilled in building end-to-end data pipelines, forecasting models, and interactive dashboards that translate raw data into actionable business decisions. Authored & presented an IEEE-format research paper comparing Classical ML vs. Deep Learning for stock price prediction (ICORIS 2026).
                 </p>
@@ -516,7 +499,7 @@
         <!-- DESKTOP MONITOR SKILLS SECTION -->
         <section class="skills-section">
             <div class="section-header reveal-zoom" style="text-align: center; margin-bottom: 25px; border:none; padding:0;">
-                <h2 class="f1-font" style="font-size: 3rem; text-shadow: 0 10px 30px rgba(0,0,0,0.8);">// SKILL INVENTORY</h2>
+                <h2 class="f1-font" style="font-size: 3rem; text-shadow: 0 10px 30px rgba(0,0,0,0.8);">// COMPUTATIONAL SKILLS</h2>
             </div>
             
             <div class="monitor-frame reveal-zoom">
@@ -535,7 +518,7 @@
                     <div class="desktop-app-icon"><i class="fas fa-sitemap"></i><span>DATA STRUCT</span></div>
                     <div class="desktop-app-icon"><i class="fas fa-database"></i><span>SQL / DB</span></div>
                     <div class="desktop-app-icon"><i class="fab fa-git-alt"></i><span>GIT & GITHUB</span></div>
-                    <div class="desktop-app-icon"><i class="fas fa-brain"></i><span>MACHINE LRN</span></div>
+                    <div class="desktop-app-icon"><i class="fas fa-brain"></i><span>MACHINE LEARNING</span></div>
                     <div class="desktop-app-icon"><i class="fas fa-network-wired"></i><span>DEEP LEARNING</span></div>
                     <div class="desktop-app-icon"><i class="fas fa-eye"></i><span>OPENCV</span></div>
                     <div class="desktop-app-icon"><i class="fas fa-comments"></i><span>NLP & REGEX</span></div>
@@ -690,9 +673,9 @@
                                 </div>
                                 <div class="li-desc">
                                     <ul>
-                                        <li>Analyzed 10M+ transaction records using Python (Pandas) to build demand intelligence models[cite: 1].</li>
-                                        <li>Built automated Python ETL pipelines, reducing dataset processing time by 60% while maintaining 100% data integrity[cite: 1].</li>
-                                        <li>Engineered inventory risk framework, identifying 30% overstock (>90 days) and preventing stockouts[cite: 1].</li>
+                                        <li>Analyzed 10M+ transaction records using Python (Pandas) to build demand intelligence models.</li>
+                                        <li>Built automated Python ETL pipelines, reducing dataset processing time by 60% while maintaining 100% data integrity.</li>
+                                        <li>Engineered inventory risk framework, identifying 30% overstock (>90 days) and preventing stockouts.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -709,7 +692,7 @@
                                     <div class="li-date">Aug 2025</div>
                                 </div>
                                 <div class="li-desc">
-                                    <p>Provided on-ground assistance for thousands of visitors and handled 11 automotive tenants (Toyota, BMW, BYD) during the 3-day expo[cite: 1].</p>
+                                    <p>Provided on-ground assistance for thousands of visitors and handled 11 automotive tenants (Toyota, BMW, BYD) during the 3-day expo.</p>
                                 </div>
                             </div>
                         </div>
@@ -733,9 +716,9 @@
                                 </div>
                                 <div class="li-desc">
                                     <ul>
-                                        <li>Built automated email reminder system for seminar program (356 registered participants)[cite: 1].</li>
-                                        <li>Extended email reminder system to Runora charity run event (70+ participants)[cite: 1].</li>
-                                        <li>Collaborated with frontend team on feature deployment and database structuring[cite: 1].</li>
+                                        <li>Built automated email reminder system for seminar program (356 registered participants).</li>
+                                        <li>Extended email reminder system to Runora charity run event (70+ participants).</li>
+                                        <li>Collaborated with frontend team on feature deployment and database structuring.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -753,8 +736,8 @@
                                 </div>
                                 <div class="li-desc">
                                     <ul>
-                                        <li>Directed strategic vision for BVoice Radio, overseeing flagship events (700+ Expo participants, 356 Seminar participants)[cite: 1].</li>
-                                        <li>Led 100+ member student organization, managing sponsor relationships and new event revenue streams[cite: 1].</li>
+                                        <li>Directed strategic vision for BVoice Radio, overseeing flagship events (700+ Expo participants, 356 Seminar participants).</li>
+                                        <li>Led 100+ member student organization, managing sponsor relationships and new event revenue streams.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -772,8 +755,8 @@
                                 </div>
                                 <div class="li-desc">
                                     <ul>
-                                        <li>Produced weekly on-air broadcasts and curated Gen-Z content strategy (+8 listeners per session)[cite: 1].</li>
-                                        <li>Hosted live radio broadcasts and managed real-time audience interaction[cite: 1].</li>
+                                        <li>Produced weekly on-air broadcasts and curated Gen-Z content strategy (+8 listeners per session).</li>
+                                        <li>Hosted live radio broadcasts and managed real-time audience interaction.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -793,50 +776,50 @@
                     <div class="cert-issuer">ICORIS 2026</div>
                     <h4>IEEE Research Paper Author & Presenter</h4>
                     <div class="cert-date">2026</div>
-                    <div class="cert-id">Paper: "Classical ML vs. Deep Learning for Stock Price Prediction"[cite: 1]</div>
+                    <div class="cert-id">Paper: "Classical ML vs. Deep Learning for Stock Price Prediction"</div>
                 </div>
 
                 <div class="cert-card-node">
                     <div class="cert-issuer">BINUS x MICROSOFT</div>
                     <h4>Microsoft Azure AI Fundamentals — Course Completion</h4>
                     <div class="cert-date">March 09, 2026</div>
-                    <div class="cert-id">Cert No: 111541121816490/GreatNusa/III/2026[cite: 4]</div>
+                    <div class="cert-id">Cert No: 111541121816490/GreatNusa/III/2026</div>
                 </div>
 
                 <div class="cert-card-node">
                     <div class="cert-issuer">MICROSOFT x GREATNUSA</div>
                     <h4>M365 Copilot Productivity Training</h4>
                     <div class="cert-date">March 06, 2026</div>
-                    <div class="cert-id">Cert No: 191440413816490/GreatNusa/III/2026[cite: 3]</div>
+                    <div class="cert-id">Cert No: 191440413816490/GreatNusa/III/2026</div>
                 </div>
 
                 <div class="cert-card-node">
                     <div class="cert-issuer">ZIDIO DEVELOPMENT</div>
                     <h4>Data Science & Analytics Internship & Training</h4>
                     <div class="cert-date">September 04, 2026</div>
-                    <div class="cert-id">Verify ID: ZID-V-5385C2409B0D / ZID-V-3BAB7628DFED[cite: 10, 12]</div>
+                    <div class="cert-id">Verify ID: ZID-V-5385C2409B0D / ZID-V-3BAB7628DFED</div>
                 </div>
 
                 <div class="cert-card-node">
                     <div class="cert-issuer">BEELINGUA — BINUS UNIVERSITY</div>
                     <h4>Advanced English C2.1 & Business Comm C2.2</h4>
                     <div class="cert-date">July 2026</div>
-                    <div class="cert-id">Verify ID: 2026-C-qkkejFoaONxMp / 2026-C-KmapzLER6EKIH[cite: 8, 9]</div>
+                    <div class="cert-id">Verify ID: 2026-C-qkkejFoaONxMp / 2026-C-KmapzLER6EKIH</div>
                 </div>
 
                 <div class="cert-card-node">
                     <div class="cert-issuer">BEELINGUA — BINUS UNIVERSITY</div>
                     <h4>Creative Writing C1.1 & Professional Office C1.2</h4>
                     <div class="cert-date">July 2026</div>
-                    <div class="cert-id">Verify ID: 2026-C-9XwrniKgbsILE / 2026-C-NEAANGwiaUVtE[cite: 6, 7]</div>
+                    <div class="cert-id">Verify ID: 2026-C-9XwrniKgbsILE / 2026-C-NEAANGwiaUVtE</div>
                 </div>
             </div>
 
             <div class="linkedin-proof-banner reveal-zoom">
                 <h3 class="f1-font">VERIFIED CREDENTIALS & CERTIFICATION PROOF</h3>
-                <p>Seluruh bukti fisik sertifikat dan kredensial resmi dapat diverifikasi secara langsung melalui profil LinkedIn saya.</p>
+                <p>All of this Certificate is proven on my LinkedIn profile, please feel free to explore.</p>
                 <a href="https://www.linkedin.com/in/ezra-mayurga-44746021a/" target="_blank" rel="noopener noreferrer" class="linkedin-btn-action f1-font">
-                    <i class="fab fa-linkedin" style="font-size: 1.3rem;"></i> CHECK LINKEDIN PROFILE
+                    <i class="fab fa-linkedin" style="font-size: 1.3rem;"></i> EZRA MAYURGA
                 </a>
             </div>
         </section>
@@ -859,8 +842,7 @@
                 color1: 0xceff00,
                 color2: 0x00ff88,
                 backgroundColor: 0x030404
-            },
-            preloaderDelayMs: 3800
+            }
         };
 
         // Initialize Vanta Background Safely
@@ -893,21 +875,174 @@
             console.warn("Vanta.js failed to load smoothly:", err);
         }
 
-        // Handle Intro Sequence
-        window.addEventListener('load', () => {
-            const intro = document.getElementById('cinematic-intro');
-            if (intro) {
-                setTimeout(() => {
-                    intro.style.transition = 'opacity 0.8s ease';
-                    intro.style.opacity = '0';
-                    setTimeout(() => {
-                        intro.remove();
-                        document.body.classList.remove('intro-active');
-                        window.dispatchEvent(new Event('scroll'));
-                    }, 800);
-                }, CONFIG.preloaderDelayMs);
+        // === Glyph Portal trailer engine (vanilla-JS port of GlyphPortal.tsx) ===
+        // Glyph Portal © 2026 Christian Katzmann. MIT. Keep this notice with copies.
+        // Origin: UsefulPortal.astro on https://ktzm.dk → UsefulPortal.tsx → ClarityPortal.tsx.
+        // Auto-plays once on load: camera zooms into the "H" of MY APPROACH, then the
+        // whole trailer fades out to reveal the site. No scroll/click needed — refresh to replay.
+        (function initGlyphPortalTrailer() {
+            const section = document.getElementById('gp-approach');
+            if (!section) { document.body.classList.remove('intro-active'); return; }
+
+            const text = "MY APPROACH";
+            const targetIndex = text.lastIndexOf('H'); // zoom into the "H"
+            const clipId = "gp-approach-clip";
+            const NOTICE_MS = 2200; // birds + word sit still first, so people notice the background
+            const ZOOM_MS = 3400;   // duration of the zoom-in
+            const FADE_MS = 800;    // duration of the final fade into the site
+
+            const clamp = (n, a = 0, b = 1) => Math.min(b, Math.max(a, n));
+            const smooth = (a, b, n) => { const t = clamp((n - a) / (b - a)); return t * t * (3 - 2 * t); };
+
+            function interior(context, char, font) {
+                const canvas = context.canvas;
+                context.font = font;
+                const m = context.measureText(char);
+                const pad = 8;
+                const left = Math.ceil(m.actualBoundingBoxLeft);
+                const ascent = Math.ceil(m.actualBoundingBoxAscent);
+                canvas.width = Math.max(1, Math.ceil(m.actualBoundingBoxLeft + m.actualBoundingBoxRight) + pad * 2);
+                canvas.height = Math.max(1, Math.ceil(m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) + pad * 2);
+                context.font = font;
+                context.fontKerning = "none";
+                context.fillText(char, pad + left, pad + ascent);
+                const { width, height } = canvas;
+                const pixels = context.getImageData(0, 0, width, height).data;
+                const rows = new Uint16Array(width + 1);
+                let size = 0, bx = 0, by = 0;
+                for (let y = 0; y < height; y++) {
+                    let diagonal = 0;
+                    for (let x = 0; x < width; x++) {
+                        const above = rows[x + 1];
+                        rows[x + 1] = pixels[(y * width + x) * 4 + 3] > 245
+                            ? Math.min(above, rows[x], diagonal) + 1 : 0;
+                        diagonal = above;
+                        if (rows[x + 1] > size) { size = rows[x + 1]; bx = x; by = y; }
+                    }
+                }
+                if (size < 3) return null;
+                return {
+                    x: (bx + 1 - size / 2 - pad - left) / 3,
+                    y: (by + 1 - size / 2 - pad - ascent) / 3,
+                    radius: (size / 2 - 1) / 3
+                };
             }
-        });
+
+            const field = section.querySelector('[data-gp-field]');
+            const art = section.querySelector('[data-gp-art]');
+            const clip = section.querySelector('#' + clipId);
+            const glyph = section.querySelector('[data-gp-glyph]');
+            const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d", { willReadFrequently: true });
+
+            let W = 1, H = 1, startScale = 1, endScale = 1;
+            let center = { x: 0, y: 0 }, target = null;
+            let candidates = [];
+            let bounds = { x: 0, y: 0, width: 1, height: 1 };
+            let ready = false, finished = false, startTs = null;
+
+            function readInk() {
+                if (!context) return false;
+                const font = getComputedStyle(glyph);
+                const scanFont = `${font.fontWeight} 300px ${font.fontFamily}`;
+                context.font = `${font.fontWeight} 100px ${font.fontFamily}`;
+                context.fontKerning = "none";
+                const metrics = context.measureText(text);
+                const advances = Array.from({ length: text.length }, (_, i) => context.measureText(text.slice(0, i)).width);
+                bounds = {
+                    x: -metrics.actualBoundingBoxLeft, y: -metrics.actualBoundingBoxAscent,
+                    width: metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight,
+                    height: metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+                };
+                if (!bounds.width || !bounds.height) return false;
+                center = { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
+                let offset = 0;
+                candidates = [];
+                for (const char of Array.from(text)) {
+                    context.font = `${font.fontWeight} 100px ${font.fontFamily}`;
+                    const found = interior(context, char, scanFont);
+                    if (found) candidates.push({ ...found, x: found.x + advances[offset], index: offset });
+                    offset += char.length;
+                }
+                target = candidates.find((c) => c.index === targetIndex)
+                    || [...candidates].sort((a, b) => b.radius - a.radius || Math.abs(a.x - center.x) - Math.abs(b.x - center.x))[0]
+                    || null;
+                return true;
+            }
+
+            function layout() {
+                W = section.clientWidth;
+                H = section.clientHeight;
+                if (!W || !H) return;
+                art.setAttribute("viewBox", `0 0 ${W} ${H}`);
+                if (!ready) ready = readInk();
+                if (!ready) return;
+                const wordHeight = H * .34;
+                startScale = Math.min(W * 0.8 / bounds.width, wordHeight / bounds.height);
+                endScale = target ? Math.max(startScale, Math.hypot(W, H) / (target.radius * 1.35)) : startScale;
+            }
+
+            function paint(p) {
+                const t = clamp(p / 0.78);
+                const eased = t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
+                const scale = Math.exp(Math.log(startScale) + Math.log(endScale / startScale) * eased);
+                const blend = endScale === startScale ? 0 : (1 / scale - 1 / startScale) / (1 / endScale - 1 / startScale);
+                const cx = center.x + ((target ? target.x : center.x) - center.x) * blend;
+                const cy = center.y + ((target ? target.y : center.y) - center.y) * blend;
+                const roll = -4 * smooth(0.06, 0.5, t) * (1 - smooth(0.62, 0.92, t));
+                const radians = roll * Math.PI / 180;
+                const dx = W / 2 / scale, dy = (H * .46 + H * .04 * eased) / scale;
+                clip.setAttribute("transform", `scale(${scale}) rotate(${roll})`);
+                glyph.setAttribute("transform", `translate(${Math.cos(radians) * dx + Math.sin(radians) * dy - cx} ${-Math.sin(radians) * dx + Math.cos(radians) * dy - cy})`);
+                field.style.clipPath = t >= 1 ? "none" : `url(#${clipId})`;
+                section.style.setProperty("--gp-field-scale", String(1 + .16 * smooth(0, .82, p)));
+            }
+
+            function finish() {
+                if (finished) return;
+                finished = true;
+                section.style.transition = `opacity ${FADE_MS}ms ease`;
+                requestAnimationFrame(() => { section.style.opacity = "0"; });
+                setTimeout(() => {
+                    section.remove();
+                    document.body.classList.remove('intro-active');
+                    window.dispatchEvent(new Event('resize'));
+                    window.dispatchEvent(new Event('scroll'));
+                }, FADE_MS + 40);
+            }
+
+            function tick(now) {
+                if (finished) return;
+                if (!ready) layout();
+                if (startTs === null) startTs = now;
+                const p = clamp((now - startTs) / ZOOM_MS);
+                if (ready) paint(p);
+                if (p < 1) requestAnimationFrame(tick);
+                else finish();
+            }
+
+            function startZoom() {
+                if (finished) return;
+                section.dataset.gpReady = "true"; // hides the static word, reveals the clipped field
+                requestAnimationFrame(tick);
+            }
+
+            layout();
+            window.addEventListener("resize", layout, { passive: true });
+            motion.addEventListener("change", () => { if (motion.matches) finish(); });
+
+            if (motion.matches) {
+                // Reduced motion: just show the word over the birds briefly, then reveal the site.
+                setTimeout(finish, 1200);
+            } else {
+                // Phase 1 — birds move behind the word, untouched, so people notice them.
+                // Phase 2 — camera zooms into the "H". Phase 3 — fade into the site.
+                setTimeout(startZoom, NOTICE_MS);
+                // Safety net in case a tab is backgrounded or rAF stalls unexpectedly.
+                setTimeout(finish, NOTICE_MS + ZOOM_MS + 5000);
+            }
+        })();
 
         // Mouse Coordinates Cache
         let mouseX = window.innerWidth / 2;
